@@ -1,0 +1,3 @@
+Added Component: Designator=CC7G(CAP_CERAM_5MM)
+Added Pin To Net: NetName=GND2 Pin=CC7G-1
+Added Member To Class: ClassName=gate_driver_array Member=Component CC7G CAP_CERAM_5MM

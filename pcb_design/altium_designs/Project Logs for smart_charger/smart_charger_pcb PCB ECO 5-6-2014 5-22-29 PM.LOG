@@ -1,0 +1,6 @@
+Removed Pin From Net: NetName=GND2 Pin=CC2P-2
+Added Component: Designator=ZD2G(ZENER_1W)
+Added Pin To Net: NetName=GND Pin=HT1-GND
+Added Pin To Net: NetName=EM1 Pin=ZD2G-1
+Added Pin To Net: NetName=NetZD1G_2 Pin=ZD2G-2
+Added Member To Class: ClassName=gate_driver_array Member=Component ZD2G ZENER_1W

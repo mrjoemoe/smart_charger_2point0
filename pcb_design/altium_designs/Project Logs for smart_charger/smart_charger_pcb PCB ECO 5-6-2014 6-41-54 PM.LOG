@@ -1,0 +1,8 @@
+Added Component: Designator=C14G(Cap_Pol_5mm)
+Added Component: Designator=C15G(Cap_Pol_5mm)
+Added Pin To Net: NetName=15V2 Pin=C14G-1
+Added Pin To Net: NetName=GND2 Pin=C14G-2
+Added Pin To Net: NetName=15V2 Pin=C15G-1
+Added Pin To Net: NetName=GND2 Pin=C15G-2
+Added Member To Class: ClassName=gate_driver_array Member=Component C14G Cap_Pol_5
+Added Member To Class: ClassName=gate_driver_array Member=Component C15G Cap_Pol_5

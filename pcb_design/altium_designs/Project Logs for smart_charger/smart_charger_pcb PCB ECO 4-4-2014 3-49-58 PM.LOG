@@ -1,0 +1,4 @@
+Removed Pin From Net: NetName=5V2 Pin=H1-5V
+Removed Pin From Net: NetName=GND2 Pin=H1-GND
+Removed Member From Class: ClassName=gate_driver_array Member=H1
+Added Room: Name=gate_driver_array

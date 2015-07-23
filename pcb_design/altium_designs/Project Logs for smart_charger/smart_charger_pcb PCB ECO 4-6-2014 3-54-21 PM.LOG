@@ -1,0 +1,13 @@
+Removed Pin From Net: NetName=GND1 Pin=C16S-1
+Removed Pin From Net: NetName=GND1 Pin=C17S-1
+Removed Pin From Net: NetName=15V2 Pin=CC1P-1
+Removed Pin From Net: NetName=-15V Pin=CC4P-1
+Added Component: Designator=CC7G(CAP_CERAM_5MM)
+Added Component: Designator=CC8G(CAP_CERAM_5MM)
+Added Component: Designator=CC9G(CAP_CERAM_5MM)
+Added Pin To Net: NetName=GND2 Pin=CC7G-1
+Added Pin To Net: NetName=GND2 Pin=CC8G-2
+Added Pin To Net: NetName=15V2 Pin=CC9G-2
+Added Member To Class: ClassName=gate_driver_array Member=Component CC7G CAP_CERAM_5MM
+Added Member To Class: ClassName=gate_driver_array Member=Component CC8G CAP_CERAM_5MM
+Added Member To Class: ClassName=gate_driver_array Member=Component CC9G CAP_CERAM_5MM

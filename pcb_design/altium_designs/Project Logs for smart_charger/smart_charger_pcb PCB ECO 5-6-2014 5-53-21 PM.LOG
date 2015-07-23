@@ -1,0 +1,8 @@
+Added Component: Designator=ZD11G(ZENER_1W)
+Added Component: Designator=ZD12G(ZENER_1W)
+Added Pin To Net: NetName=NetGATE6_2 Pin=ZD11G-1
+Added Pin To Net: NetName=NetZD11G_2 Pin=ZD11G-2
+Added Pin To Net: NetName=EM6 Pin=ZD12G-1
+Added Pin To Net: NetName=NetZD11G_2 Pin=ZD12G-2
+Added Member To Class: ClassName=gate_driver_array Member=Component ZD11G ZENER_1W
+Added Member To Class: ClassName=gate_driver_array Member=Component ZD12G ZENER_1W

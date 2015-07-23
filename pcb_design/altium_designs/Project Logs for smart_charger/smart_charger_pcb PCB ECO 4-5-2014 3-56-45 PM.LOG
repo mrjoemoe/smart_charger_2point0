@@ -1,0 +1,231 @@
+Added Component: Designator=C2S(CAPR5-4X5)
+Added Component: Designator=C3S(CAPR5-4X5)
+Added Component: Designator=C4S(CAPR5-4X5)
+Added Component: Designator=C5S(CAPR5-4X5)
+Added Component: Designator=C6S(CAPR5-4X5)
+Added Component: Designator=C8S(CAPR5-4X5)
+Added Component: Designator=C11S(CAPR5-4X5)
+Added Component: Designator=C12(Cap_Pol_5mm)
+Added Component: Designator=C13(Cap_Pol_5mm)
+Added Component: Designator=C14(Cap_Pol_5mm)
+Added Component: Designator=C15(Cap_Pol_5mm)
+Added Component: Designator=C16S(CAP_CERAM_5MM)
+Added Component: Designator=C17S(CAP_CERAM_5MM)
+Added Component: Designator=C18S(CAP_CERAM_5MM)
+Added Component: Designator=C19S(CAP_CERAM_5MM)
+Added Component: Designator=iac_sensor(LA100P)
+Added Component: Designator=ibatt_sensor(LA100P)
+Added Component: Designator=O1(AD8032A)
+Added Component: Designator=O2(AD8032A)
+Added Component: Designator=O4(AD8032A)
+Added Component: Designator=O5(AD8032A)
+Added Component: Designator=R1S(Res_Vishay_5W)
+Added Component: Designator=R2S(AXIAL-0.3)
+Added Component: Designator=R3S(AXIAL-0.3)
+Added Component: Designator=R4S(AXIAL-0.3)
+Added Component: Designator=R7S(AXIAL-0.3)
+Added Component: Designator=R8S(Res_Vishay_5W)
+Added Component: Designator=R9S(AXIAL-0.3)
+Added Component: Designator=R10S(AXIAL-0.3)
+Added Component: Designator=R11S(Res_Vishay_5W)
+Added Component: Designator=R12S(AXIAL-0.3)
+Added Component: Designator=R13S(AXIAL-0.3)
+Added Component: Designator=R14S(AXIAL-0.3)
+Added Component: Designator=R15S(AXIAL-0.3)
+Added Component: Designator=R16S(AXIAL-0.3)
+Added Component: Designator=R17S(AXIAL-0.3)
+Added Component: Designator=R18S(AXIAL-0.3)
+Added Component: Designator=R19S(AXIAL-0.3)
+Added Component: Designator=R20S(AXIAL-0.3)
+Added Component: Designator=R21S(AXIAL-0.3)
+Added Component: Designator=R22S(AXIAL-0.3)
+Added Component: Designator=R25S(AXIAL-0.3)
+Added Component: Designator=to_adc(Conn_10Pos)
+Added Component: Designator=vac_sensor(LV20P)
+Added Component: Designator=vbatt_in(5MM_HOR_ENTRY)
+Added Component: Designator=vbatt_sensor(LV20P)
+Added Component: Designator=vdc_in(5MM_HOR_ENTRY)
+Added Component: Designator=vdc_sensor(LV20P)
+Added Component: Designator=ZD1S(ZENER400mW)
+Added Component: Designator=ZD2S(ZENER400mW)
+Added Component: Designator=ZD3S(ZENER400mW)
+Added Component: Designator=ZD4S(ZENER400mW)
+Added Component: Designator=ZD5S(ZENER400mW)
+Added Pin To Net: NetName=GND1 Pin=C2S-2
+Added Pin To Net: NetName=GND1 Pin=C3S-2
+Added Pin To Net: NetName=GND1 Pin=C4S-2
+Added Pin To Net: NetName=GND1 Pin=C5S-2
+Added Pin To Net: NetName=GND1 Pin=C6S-2
+Added Pin To Net: NetName=GND1 Pin=C8S-2
+Added Pin To Net: NetName=5V1 Pin=C11S-1
+Added Pin To Net: NetName=GND1 Pin=C11S-2
+Added Pin To Net: NetName=+15V Pin=C12-1
+Added Pin To Net: NetName=GND1 Pin=C12-2
+Added Pin To Net: NetName=+15V Pin=C13-1
+Added Pin To Net: NetName=GND1 Pin=C13-2
+Added Pin To Net: NetName=GND1 Pin=C14-1
+Added Pin To Net: NetName=-15V Pin=C14-2
+Added Pin To Net: NetName=GND1 Pin=C15-1
+Added Pin To Net: NetName=-15V Pin=C15-2
+Added Pin To Net: NetName=+15V Pin=C16S-2
+Added Pin To Net: NetName=+15V Pin=C17S-2
+Added Pin To Net: NetName=-15V Pin=C18S-1
+Added Pin To Net: NetName=GND1 Pin=C18S-2
+Added Pin To Net: NetName=-15V Pin=C19S-1
+Added Pin To Net: NetName=GND1 Pin=C19S-2
+Added Pin To Net: NetName=+15V Pin=iac_sensor-+
+Added Pin To Net: NetName=-15V Pin=iac_sensor--
+Added Pin To Net: NetName=+15V Pin=ibatt_sensor-+
+Added Pin To Net: NetName=-15V Pin=ibatt_sensor--
+Added Pin To Net: NetName=GND1 Pin=O1-4
+Added Pin To Net: NetName=5V1 Pin=O1-8
+Added Pin To Net: NetName=GND1 Pin=O2-4
+Added Pin To Net: NetName=5V1 Pin=O2-8
+Added Pin To Net: NetName=GND1 Pin=O4-4
+Added Pin To Net: NetName=5V1 Pin=O4-8
+Added Pin To Net: NetName=GND1 Pin=O5-4
+Added Pin To Net: NetName=5V1 Pin=O5-8
+Added Pin To Net: NetName=NetFUSE1_1 Pin=R1S-1
+Added Pin To Net: NetName=GND1 Pin=R2S-1
+Added Pin To Net: NetName=GND1 Pin=R9S-1
+Added Pin To Net: NetName=GND1 Pin=R12S-1
+Added Pin To Net: NetName=GND1 Pin=R14S-1
+Added Pin To Net: NetName=5V1 Pin=R17S-2
+Added Pin To Net: NetName=GND1 Pin=R18S-2
+Added Pin To Net: NetName=GND1 Pin=R20S-1
+Added Pin To Net: NetName=GND1 Pin=to_adc-1
+Added Pin To Net: NetName=GND1 Pin=to_adc-3
+Added Pin To Net: NetName=GND1 Pin=to_adc-5
+Added Pin To Net: NetName=GND1 Pin=to_adc-7
+Added Pin To Net: NetName=GND1 Pin=to_adc-9
+Added Pin To Net: NetName=+15V Pin=vac_sensor-+15V
+Added Pin To Net: NetName=-15V Pin=vac_sensor--15V
+Added Pin To Net: NetName=NetPS1_ACN Pin=vac_sensor-HV-
+Added Pin To Net: NetName=+15V Pin=vbatt_sensor-+15V
+Added Pin To Net: NetName=-15V Pin=vbatt_sensor--15V
+Added Pin To Net: NetName=+15V Pin=vdc_sensor-+15V
+Added Pin To Net: NetName=-15V Pin=vdc_sensor--15V
+Added Pin To Net: NetName=GND1 Pin=ZD1S-1
+Added Pin To Net: NetName=GND1 Pin=ZD2S-1
+Added Pin To Net: NetName=GND1 Pin=ZD3S-1
+Added Pin To Net: NetName=GND1 Pin=ZD4S-1
+Added Pin To Net: NetName=GND1 Pin=ZD5S-1
+Added Pin To Net: NetName=NetC2S_1 Pin=C2S-1
+Added Pin To Net: NetName=NetC2S_1 Pin=R7S-1
+Added Pin To Net: NetName=NetC2S_1 Pin=to_adc-2
+Added Pin To Net: NetName=NetC2S_1 Pin=ZD1S-2
+Added Net: Name=NetC2S_1
+Added Pin To Net: NetName=NetC3S_1 Pin=C3S-1
+Added Pin To Net: NetName=NetC3S_1 Pin=R10S-2
+Added Pin To Net: NetName=NetC3S_1 Pin=to_adc-6
+Added Pin To Net: NetName=NetC3S_1 Pin=ZD3S-2
+Added Net: Name=NetC3S_1
+Added Pin To Net: NetName=NetC4S_1 Pin=C4S-1
+Added Pin To Net: NetName=NetC4S_1 Pin=R13S-2
+Added Pin To Net: NetName=NetC4S_1 Pin=to_adc-8
+Added Pin To Net: NetName=NetC4S_1 Pin=ZD4S-2
+Added Net: Name=NetC4S_1
+Added Pin To Net: NetName=NetC5S_1 Pin=C5S-1
+Added Pin To Net: NetName=NetC5S_1 Pin=O1-3
+Added Pin To Net: NetName=NetC5S_1 Pin=O4-3
+Added Pin To Net: NetName=NetC5S_1 Pin=O5-3
+Added Pin To Net: NetName=NetC5S_1 Pin=R17S-1
+Added Pin To Net: NetName=NetC5S_1 Pin=R18S-1
+Added Net: Name=NetC5S_1
+Added Pin To Net: NetName=NetC6S_1 Pin=C6S-1
+Added Pin To Net: NetName=NetC6S_1 Pin=R19S-1
+Added Pin To Net: NetName=NetC6S_1 Pin=to_adc-10
+Added Pin To Net: NetName=NetC6S_1 Pin=ZD5S-2
+Added Net: Name=NetC6S_1
+Added Pin To Net: NetName=NetC8S_1 Pin=C8S-1
+Added Pin To Net: NetName=NetC8S_1 Pin=R25S-1
+Added Pin To Net: NetName=NetC8S_1 Pin=to_adc-4
+Added Pin To Net: NetName=NetC8S_1 Pin=ZD2S-2
+Added Net: Name=NetC8S_1
+Added Pin To Net: NetName=Netiac_sensor_M Pin=iac_sensor-M
+Added Pin To Net: NetName=Netiac_sensor_M Pin=R20S-2
+Added Pin To Net: NetName=Netiac_sensor_M Pin=R21S-2
+Added Net: Name=Netiac_sensor_M
+Added Pin To Net: NetName=Netibatt_sensor_M Pin=ibatt_sensor-M
+Added Pin To Net: NetName=Netibatt_sensor_M Pin=R14S-2
+Added Pin To Net: NetName=Netibatt_sensor_M Pin=R15S-2
+Added Net: Name=Netibatt_sensor_M
+Added Pin To Net: NetName=NetO1_1 Pin=O1-1
+Added Pin To Net: NetName=NetO1_1 Pin=O1-5
+Added Pin To Net: NetName=NetO1_1 Pin=R4S-1
+Added Net: Name=NetO1_1
+Added Pin To Net: NetName=NetO1_2 Pin=O1-2
+Added Pin To Net: NetName=NetO1_2 Pin=R3S-1
+Added Pin To Net: NetName=NetO1_2 Pin=R4S-2
+Added Net: Name=NetO1_2
+Added Pin To Net: NetName=NetO1_6 Pin=O1-6
+Added Pin To Net: NetName=NetO1_6 Pin=O1-7
+Added Pin To Net: NetName=NetO1_6 Pin=R7S-2
+Added Net: Name=NetO1_6
+Added Pin To Net: NetName=NetO2_1 Pin=O2-1
+Added Pin To Net: NetName=NetO2_1 Pin=O2-2
+Added Pin To Net: NetName=NetO2_1 Pin=R10S-1
+Added Net: Name=NetO2_1
+Added Pin To Net: NetName=NetO2_3 Pin=O2-3
+Added Pin To Net: NetName=NetO2_3 Pin=R9S-2
+Added Pin To Net: NetName=NetO2_3 Pin=vdc_sensor-M
+Added Net: Name=NetO2_3
+Added Pin To Net: NetName=NetO2_5 Pin=O2-5
+Added Pin To Net: NetName=NetO2_5 Pin=R12S-2
+Added Pin To Net: NetName=NetO2_5 Pin=vbatt_sensor-M
+Added Net: Name=NetO2_5
+Added Pin To Net: NetName=NetO2_6 Pin=O2-6
+Added Pin To Net: NetName=NetO2_6 Pin=O2-7
+Added Pin To Net: NetName=NetO2_6 Pin=R13S-1
+Added Net: Name=NetO2_6
+Added Pin To Net: NetName=NetO4_1 Pin=O4-1
+Added Pin To Net: NetName=NetO4_1 Pin=O4-5
+Added Pin To Net: NetName=NetO4_1 Pin=R16S-1
+Added Net: Name=NetO4_1
+Added Pin To Net: NetName=NetO4_2 Pin=O4-2
+Added Pin To Net: NetName=NetO4_2 Pin=R15S-1
+Added Pin To Net: NetName=NetO4_2 Pin=R16S-2
+Added Net: Name=NetO4_2
+Added Pin To Net: NetName=NetO4_6 Pin=O4-6
+Added Pin To Net: NetName=NetO4_6 Pin=O4-7
+Added Pin To Net: NetName=NetO4_6 Pin=R19S-2
+Added Net: Name=NetO4_6
+Added Pin To Net: NetName=NetO5_1 Pin=O5-1
+Added Pin To Net: NetName=NetO5_1 Pin=O5-5
+Added Pin To Net: NetName=NetO5_1 Pin=R22S-1
+Added Net: Name=NetO5_1
+Added Pin To Net: NetName=NetO5_2 Pin=O5-2
+Added Pin To Net: NetName=NetO5_2 Pin=R21S-1
+Added Pin To Net: NetName=NetO5_2 Pin=R22S-2
+Added Net: Name=NetO5_2
+Added Pin To Net: NetName=NetO5_6 Pin=O5-6
+Added Pin To Net: NetName=NetO5_6 Pin=O5-7
+Added Pin To Net: NetName=NetO5_6 Pin=R25S-2
+Added Net: Name=NetO5_6
+Added Pin To Net: NetName=NetR1S_2 Pin=R1S-2
+Added Pin To Net: NetName=NetR1S_2 Pin=vac_sensor-HV+
+Added Net: Name=NetR1S_2
+Added Pin To Net: NetName=NetR2S_2 Pin=R2S-2
+Added Pin To Net: NetName=NetR2S_2 Pin=R3S-2
+Added Pin To Net: NetName=NetR2S_2 Pin=vac_sensor-M
+Added Net: Name=NetR2S_2
+Added Pin To Net: NetName=NetR8S_1 Pin=R8S-1
+Added Pin To Net: NetName=NetR8S_1 Pin=vdc_in-2
+Added Net: Name=NetR8S_1
+Added Pin To Net: NetName=NetR8S_2 Pin=R8S-2
+Added Pin To Net: NetName=NetR8S_2 Pin=vdc_sensor-HV+
+Added Net: Name=NetR8S_2
+Added Pin To Net: NetName=NetR11S_1 Pin=R11S-1
+Added Pin To Net: NetName=NetR11S_1 Pin=vbatt_in-2
+Added Net: Name=NetR11S_1
+Added Pin To Net: NetName=NetR11S_2 Pin=R11S-2
+Added Pin To Net: NetName=NetR11S_2 Pin=vbatt_sensor-HV+
+Added Net: Name=NetR11S_2
+Added Pin To Net: NetName=Netvbatt_in_1 Pin=vbatt_in-1
+Added Pin To Net: NetName=Netvbatt_in_1 Pin=vbatt_sensor-HV-
+Added Net: Name=Netvbatt_in_1
+Added Pin To Net: NetName=Netvdc_in_1 Pin=vdc_in-1
+Added Pin To Net: NetName=Netvdc_in_1 Pin=vdc_sensor-HV-
+Added Net: Name=Netvdc_in_1
+Added Class: Name=sensing_circuits
+Added Room: Name=sensing_circuits

@@ -1,0 +1,48 @@
+Added Component: Designator=ISO1(AVAGO_ACNW3130)
+Added Component: Designator=ISO2(AVAGO_ACNW3130)
+Added Component: Designator=ISO3(AVAGO_ACNW3130)
+Added Component: Designator=ISO4(AVAGO_ACNW3130)
+Added Component: Designator=ISO5(AVAGO_ACNW3130)
+Added Component: Designator=ISO6(AVAGO_ACNW3130)
+Added Pin To Net: NetName=NetH1G_1Y Pin=ISO1-2
+Added Pin To Net: NetName=GND2 Pin=ISO1-3
+Added Pin To Net: NetName=NetC2G_2 Pin=ISO1-5
+Added Pin To Net: NetName=NetISO1_6 Pin=ISO1-6
+Added Pin To Net: NetName=NetISO1_6 Pin=ISO1-7
+Added Pin To Net: NetName=NetC1G_1 Pin=ISO1-8
+Added Pin To Net: NetName=NetH1G_2Y Pin=ISO2-2
+Added Pin To Net: NetName=GND2 Pin=ISO2-3
+Added Pin To Net: NetName=NetC4G_2 Pin=ISO2-5
+Added Pin To Net: NetName=NetISO2_6 Pin=ISO2-6
+Added Pin To Net: NetName=NetISO2_6 Pin=ISO2-7
+Added Pin To Net: NetName=NetC3G_1 Pin=ISO2-8
+Added Pin To Net: NetName=NetH1G_3Y Pin=ISO3-2
+Added Pin To Net: NetName=GND2 Pin=ISO3-3
+Added Pin To Net: NetName=NetC6G_2 Pin=ISO3-5
+Added Pin To Net: NetName=NetISO3_6 Pin=ISO3-6
+Added Pin To Net: NetName=NetISO3_6 Pin=ISO3-7
+Added Pin To Net: NetName=NetC5G_1 Pin=ISO3-8
+Added Pin To Net: NetName=NetH1G_4Y Pin=ISO4-2
+Added Pin To Net: NetName=GND2 Pin=ISO4-3
+Added Pin To Net: NetName=NetC8G_2 Pin=ISO4-5
+Added Pin To Net: NetName=NetISO4_6 Pin=ISO4-6
+Added Pin To Net: NetName=NetISO4_6 Pin=ISO4-7
+Added Pin To Net: NetName=NetC7G_1 Pin=ISO4-8
+Added Pin To Net: NetName=NetH1G_5Y Pin=ISO5-2
+Added Pin To Net: NetName=GND2 Pin=ISO5-3
+Added Pin To Net: NetName=NetC10G_2 Pin=ISO5-5
+Added Pin To Net: NetName=NetISO5_6 Pin=ISO5-6
+Added Pin To Net: NetName=NetISO5_6 Pin=ISO5-7
+Added Pin To Net: NetName=NetC9G_1 Pin=ISO5-8
+Added Pin To Net: NetName=NetH1G_6Y Pin=ISO6-2
+Added Pin To Net: NetName=GND2 Pin=ISO6-3
+Added Pin To Net: NetName=NetC12G_2 Pin=ISO6-5
+Added Pin To Net: NetName=NetISO6_6 Pin=ISO6-6
+Added Pin To Net: NetName=NetISO6_6 Pin=ISO6-7
+Added Pin To Net: NetName=NetC11G_1 Pin=ISO6-8
+Added Member To Class: ClassName=gate_driver_array Member=Component ISO1 AVAGO_ACNW3130
+Added Member To Class: ClassName=gate_driver_array Member=Component ISO2 AVAGO_ACNW3130
+Added Member To Class: ClassName=gate_driver_array Member=Component ISO3 AVAGO_ACNW3130
+Added Member To Class: ClassName=gate_driver_array Member=Component ISO4 AVAGO_ACNW3130
+Added Member To Class: ClassName=gate_driver_array Member=Component ISO5 AVAGO_ACNW3130
+Added Member To Class: ClassName=gate_driver_array Member=Component ISO6 AVAGO_ACNW3130

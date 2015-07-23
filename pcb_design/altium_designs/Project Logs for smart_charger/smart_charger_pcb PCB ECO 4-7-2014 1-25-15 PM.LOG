@@ -1,0 +1,4 @@
+Added Component: Designator=C3(Cap_Pol_5mm)
+Added Pin To Net: NetName=+15V Pin=C3-1
+Added Pin To Net: NetName=GND1 Pin=C3-2
+Added Member To Class: ClassName=power_supplies Member=Component C3 C1

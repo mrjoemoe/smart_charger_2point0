@@ -1,0 +1,66 @@
+Change Component Comment : Designator=C1 Old Comment=Cap1 New Comment=C1
+Change Component Comment : Designator=C7 Old Comment=Cap1_iac New Comment=C7
+Change Component Comment : Designator=C5 Old Comment=Cap1_ibatt New Comment=C5
+Change Component Comment : Designator=C2 Old Comment=Cap2 New Comment=C2
+Change Component Comment : Designator=C8 Old Comment=Cap2_iac New Comment=C8
+Change Component Comment : Designator=C6 Old Comment=Cap2_ibatt New Comment=C6
+Change Component Comment : Designator=C4 Old Comment=Cap2_vbatt New Comment=C4
+Change Component Comment : Designator=C3 Old Comment=Cap2_vdc New Comment=C3
+Change Component Comment : Designator=D1 Old Comment=D Tunnel2 New Comment=D1
+Change Component Comment : Designator=D2 Old Comment=D Tunnel2 New Comment=D2
+Change Component Comment : Designator=D3 Old Comment=D Tunnel2 New Comment=D3
+Change Component Comment : Designator=D4 Old Comment=D Tunnel2 New Comment=D4
+Change Component Comment : Designator=D5 Old Comment=D Tunnel2 New Comment=D5
+Change Component Comment : Designator=R9 Old Comment=Res1 New Comment=R9
+Change Component Comment : Designator=R10 Old Comment=Res1 New Comment=R10
+Change Component Comment : Designator=R12 Old Comment=Res1 New Comment=R12
+Change Component Comment : Designator=R13 Old Comment=Res1 New Comment=R13
+Change Component Comment : Designator=R2 Old Comment=Res2 New Comment=R2
+Change Component Comment : Designator=R20 Old Comment=Res2_iac New Comment=R20
+Change Component Comment : Designator=R14 Old Comment=Res2_ibatt New Comment=R14
+Change Component Comment : Designator=R3 Old Comment=Res3 New Comment=R3
+Change Component Comment : Designator=R21 Old Comment=Res3_iac New Comment=R21
+Change Component Comment : Designator=R15 Old Comment=Res3_ibatt New Comment=R15
+Change Component Comment : Designator=R4 Old Comment=Res4 New Comment=R4
+Change Component Comment : Designator=R22 Old Comment=Res4_iac New Comment=R22
+Change Component Comment : Designator=R16 Old Comment=Res4_ibatt New Comment=R16
+Change Component Comment : Designator=R5 Old Comment=Res5 New Comment=R5
+Change Component Comment : Designator=R23 Old Comment=Res5_iac New Comment=R23
+Change Component Comment : Designator=R17 Old Comment=Res5_ibatt New Comment=R17
+Change Component Comment : Designator=R6 Old Comment=Res6 New Comment=R6
+Change Component Comment : Designator=R24 Old Comment=Res6_iac New Comment=R24
+Change Component Comment : Designator=R18 Old Comment=Res6_ibatt New Comment=R18
+Change Component Comment : Designator=R7 Old Comment=Res7 New Comment=R7
+Change Component Comment : Designator=R19 Old Comment=Res7_iac New Comment=R19
+Change Component Comment : Designator=R25 Old Comment=Res7_iac New Comment=R25
+Added Component: Designator=C9(CAPR5-4X5)
+Added Component: Designator=C10(CAPR5-4X5)
+Added Component: Designator=C11(CAPR5-4X5)
+Added Component: Designator=C13(RB7.6-15)
+Added Component: Designator=C14(RB7.6-15)
+Added Component: Designator=C15(RB7.6-15)
+Added Component: Designator=C16(RB7.6-15)
+Added Pin To Net: NetName=5V1 Pin=C9-1
+Added Pin To Net: NetName=GND1 Pin=C9-2
+Added Pin To Net: NetName=5V1 Pin=C10-1
+Added Pin To Net: NetName=GND1 Pin=C10-2
+Added Pin To Net: NetName=5V1 Pin=C11-1
+Added Pin To Net: NetName=GND1 Pin=C11-2
+Added Pin To Net: NetName=+15V Pin=C13-1
+Added Pin To Net: NetName=GND1 Pin=C13-2
+Added Pin To Net: NetName=+15V Pin=C14-1
+Added Pin To Net: NetName=GND1 Pin=C14-2
+Added Pin To Net: NetName=GND1 Pin=C15-1
+Added Pin To Net: NetName=-15V Pin=C15-2
+Added Pin To Net: NetName=GND1 Pin=C16-1
+Added Pin To Net: NetName=-15V Pin=C16-2
+Added Member To Class: ClassName=sensing_circuits Member=Component C9
+Added Member To Class: ClassName=sensing_circuits Member=Component C10
+Added Member To Class: ClassName=sensing_circuits Member=Component C11
+Added Member To Class: ClassName=sensing_circuits Member=Component C13
+Added Member To Class: ClassName=sensing_circuits Member=Component C14 C13
+Added Member To Class: ClassName=sensing_circuits Member=Component C15 C13
+Added Member To Class: ClassName=sensing_circuits Member=Component C16 C13
+Added Member To Class: ClassName=sensing_circuits Member=Component O2 AD8032A
+Added Member To Class: ClassName=sensing_circuits Member=Component O4 AD8032A
+Added Room: Name=sensing_circuits

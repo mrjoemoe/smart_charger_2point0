@@ -1,0 +1,89 @@
+Change Component Designator: OldDesignator=* NewDesignator=vac_sensor
+Added Component: Designator=C1_iac(CAPR5-4X5)
+Added Component: Designator=C2_iac(CAPR5-4X5)
+Added Component: Designator=D1_iac(DIODE-0.7)
+Added Component: Designator=D1(DIODE-0.7)
+Added Component: Designator=iac_sensor(LA100P)
+Added Component: Designator=OA1_iac(AD8032A)
+Added Component: Designator=R2_iac(AXIAL-0.3)
+Added Component: Designator=R3_iac(AXIAL-0.3)
+Added Component: Designator=R4_iac(AXIAL-0.3)
+Added Component: Designator=R5_iac(AXIAL-0.3)
+Added Component: Designator=R6_iac(AXIAL-0.3)
+Added Component: Designator=R7_iac(AXIAL-0.3)
+Added Component: Designator=to_adc(Conn_10Pos)
+Added Component: Designator=vac_in(5MM_HOR_ENTRY)
+Added Pin To Net: NetName=GND1 Pin=C1_iac-2
+Added Pin To Net: NetName=GND1 Pin=C2_iac-2
+Added Pin To Net: NetName=GND1 Pin=D1-1
+Added Pin To Net: NetName=NetC2_1 Pin=D1-2
+Added Pin To Net: NetName=GND1 Pin=D1_iac-1
+Added Pin To Net: NetName=+15V Pin=iac_sensor-+
+Added Pin To Net: NetName=-15V Pin=iac_sensor--
+Added Pin To Net: NetName=GND1 Pin=OA1_iac-4
+Added Pin To Net: NetName=5V1 Pin=OA1_iac-8
+Added Pin To Net: NetName=GND1 Pin=R2_iac-1
+Added Pin To Net: NetName=5V1 Pin=R5_iac-2
+Added Pin To Net: NetName=GND1 Pin=R6_iac-1
+Added Pin To Net: NetName=GND1 Pin=to_adc-1
+Added Pin To Net: NetName=NetC2_1 Pin=to_adc-2
+Added Pin To Net: NetName=GND1 Pin=to_adc-3
+Added Pin To Net: NetName=GND1 Pin=to_adc-5
+Added Pin To Net: NetName=GND1 Pin=to_adc-7
+Added Pin To Net: NetName=GND1 Pin=to_adc-9
+Added Pin To Net: NetName=Net*_HV- Pin=vac_in-1
+Added Pin To Net: NetName=Net5WR*_1 Pin=vac_in-2
+Added Pin To Net: NetName=+15V Pin=vac_sensor-+15V
+Added Pin To Net: NetName=-15V Pin=vac_sensor--15V
+Change Net Name : Old Net Name=Net5WR*_1 New Net Name=VAC+
+Change Net Name : Old Net Name=Net*_HV+ New Net Name=Net5WR*_2
+Change Net Name : Old Net Name=Net*_HV- New Net Name=Netvac_in_1
+Change Net Name : Old Net Name=Net*_M New Net Name=M1
+Added Pin To Net: NetName=M2 Pin=iac_sensor-M
+Added Pin To Net: NetName=M2 Pin=R2_iac-2
+Added Pin To Net: NetName=M2 Pin=R3_iac-2
+Added Net: Name=M2
+Added Pin To Net: NetName=NetC1_iac_1 Pin=C1_iac-1
+Added Pin To Net: NetName=NetC1_iac_1 Pin=OA1_iac-3
+Added Pin To Net: NetName=NetC1_iac_1 Pin=R5_iac-1
+Added Pin To Net: NetName=NetC1_iac_1 Pin=R6_iac-2
+Added Net: Name=NetC1_iac_1
+Added Pin To Net: NetName=NetC2_iac_1 Pin=C2_iac-1
+Added Pin To Net: NetName=NetC2_iac_1 Pin=D1_iac-2
+Added Pin To Net: NetName=NetC2_iac_1 Pin=R7_iac-1
+Added Pin To Net: NetName=NetC2_iac_1 Pin=to_adc-4
+Added Net: Name=NetC2_iac_1
+Added Pin To Net: NetName=NetOA1_iac_1 Pin=OA1_iac-1
+Added Pin To Net: NetName=NetOA1_iac_1 Pin=OA1_iac-5
+Added Pin To Net: NetName=NetOA1_iac_1 Pin=R4_iac-1
+Added Net: Name=NetOA1_iac_1
+Added Pin To Net: NetName=NetOA1_iac_2 Pin=OA1_iac-2
+Added Pin To Net: NetName=NetOA1_iac_2 Pin=R3_iac-1
+Added Pin To Net: NetName=NetOA1_iac_2 Pin=R4_iac-2
+Added Net: Name=NetOA1_iac_2
+Added Pin To Net: NetName=NetOA1_iac_6 Pin=OA1_iac-6
+Added Pin To Net: NetName=NetOA1_iac_6 Pin=OA1_iac-7
+Added Pin To Net: NetName=NetOA1_iac_6 Pin=R7_iac-2
+Added Net: Name=NetOA1_iac_6
+Added Pin To Net: NetName=Netto_adc_6 Pin=to_adc-6
+Added Net: Name=Netto_adc_6
+Added Pin To Net: NetName=Netto_adc_8 Pin=to_adc-8
+Added Net: Name=Netto_adc_8
+Added Pin To Net: NetName=Netto_adc_10 Pin=to_adc-10
+Added Net: Name=Netto_adc_10
+Added Member To Class: ClassName=sensing_circuits Member=Component C1_iac Cap1_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component C2_iac Cap2_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component D1_iac D Zener_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component D1 D Zener
+Added Member To Class: ClassName=sensing_circuits Member=Component iac_sensor LA100P
+Added Member To Class: ClassName=sensing_circuits Member=Component OA1_iac AD8032A
+Added Member To Class: ClassName=sensing_circuits Member=Component R2_iac Res2_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component R3_iac Res3_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component R4_iac Res4_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component R5_iac Res5_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component R6_iac Res6_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component R7_iac Res7_iac
+Added Member To Class: ClassName=sensing_circuits Member=Component to_adc 10PosConn
+Added Member To Class: ClassName=sensing_circuits Member=Component vac_in 5MM_HOR_ENTRY
+Added Member To Class: ClassName=sensing_circuits Member=Component vac_sensor LV20P
+Added Room: Name=sensing_circuits

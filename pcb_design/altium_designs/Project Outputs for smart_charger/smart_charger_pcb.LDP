@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: C:\Documents and Settings\Jordan\My Documents\Altium_Designs\smart_charger_pcb.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=smart_charger_pcb-roundholes.txt|LayerPairs=gtl,gbl
+LayersSetName=Top_Bot_Square_Holes|DrillFile=smart_charger_pcb-squareholes.txt|LayerPairs=gtl,gbl

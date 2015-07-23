@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+NCDrill File Report For: smart_charger_pcb.PcbDoc   5/7/2014  5:21:36 PM
+---------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : smart_charger_pcb-RoundHoles.TXT
+ASCII SquareHoles File : smart_charger_pcb-SquareHoles.TXT
+EIA File   : smart_charger_pcb.DRL
+
+Tool         Hole Size           Hole Type     Hole Count Plated       Tool Travel
+---------------------------------------------------------------------------
+T1        24mil (0.6096mm)         Round          21               10.29 Inch (261.26 mm)
+T2        28mil (0.7112mm)         Round          241              59.20 Inch (1503.70 mm)
+T3        30mil (0.762mm)          Round          48               40.91 Inch (1039.09 mm)
+T4        31mil (0.7874mm)         Round          26               13.43 Inch (341.19 mm)
+T5        33mil (0.8382mm)         Round          118              61.68 Inch (1566.77 mm)
+T6        33mil (0.8382mm)         Square         6                5.98 Inch (151.77 mm)
+T7        35mil (0.889mm)          Round          20               2.11 Inch (53.59 mm)
+T8        39mil (0.9906mm)         Round          24               10.03 Inch (254.73 mm)
+T9        39mil (0.9906mm)         Square         6                17.70 Inch (449.52 mm)
+T10       45mil (1.143mm)          Round          41               37.87 Inch (961.94 mm)
+T11       45mil (1.143mm)          Square         9                5.98 Inch (151.77 mm)
+T12       53mil (1.3462mm)         Round          5                8.28 Inch (210.41 mm)
+T13       69mil (1.7526mm)         Round          12               3.93 Inch (99.70 mm)
+T14       157mil (3.9878mm)        Round          4         NPTH   30.41 Inch (772.47 mm)
+---------------------------------------------------------------------------
+Totals                                            581              307.79 Inch (7817.93 mm)
+
+Total Processing Time (hh:mm:ss) : 00:00:01

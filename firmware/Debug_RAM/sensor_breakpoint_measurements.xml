@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<breakpoints xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="breakpoints.xsd">
+	<breakpoint type="Software">
+		<property>
+			<name>Physical Properties</name>
+			<property>
+				<name>Location</name>
+				<location>
+					<expression>4171449</expression>
+					<page>0</page>
+				</location>
+			</property>
+		</property>
+		<property>
+			<name>Logical Properties</name>
+			<property>
+				<name>Condition</name>
+				<string></string>
+			</property>
+			<property>
+				<name>Skip Count</name>
+				<integer>0</integer>
+				<property>
+					<name>Current Count</name>
+					<integer>0</integer>
+				</property>
+			</property>
+			<property>
+				<name>Action</name>
+				<string>Write Data to File</string>
+				<property>
+					<name>File</name>
+					<file>C:\Documents and Settings\Administrator\My Documents\Dropbox\masc\research\adc_bad_sensors\bad_sensors\Debug_RAM\igbt_control_pos.dat</file>
+				</property>
+				<property>
+					<name>Format</name>
+					<string>Integer</string>
+				</property>
+				<property>
+					<name>Start Address</name>
+					<string>0x003FB95C</string>
+					<property>
+						<name>Page</name>
+						<string>Data</string>
+					</property>
+				</property>
+				<property>
+					<name>Length</name>
+					<string>0x00000001</string>
+				</property>
+			</property>
+			<property>
+				<name>Group</name>
+				<string>Default Group</string>
+			</property>
+			<property>
+				<name>Name</name>
+				<string>Software</string>
+			</property>
+		</property>
+		<enabled>1</enabled>
+	</breakpoint>
+	<breakpoint type="Software">
+		<property>
+			<name>Physical Properties</name>
+			<property>
+				<name>Location</name>
+				<location>
+					<expression>4171449</expression>
+					<page>0</page>
+				</location>
+			</property>
+		</property>
+		<property>
+			<name>Logical Properties</name>
+			<property>
+				<name>Condition</name>
+				<string></string>
+			</property>
+			<property>
+				<name>Skip Count</name>
+				<integer>0</integer>
+				<property>
+					<name>Current Count</name>
+					<integer>0</integer>
+				</property>
+			</property>
+			<property>
+				<name>Action</name>
+				<string>Write Data to File</string>
+				<property>
+					<name>File</name>
+					<file>C:\Documents and Settings\Administrator\My Documents\Dropbox\masc\research\adc_bad_sensors\bad_sensors\Debug_RAM\igbt_control_neg.dat</file>
+				</property>
+				<property>
+					<name>Format</name>
+					<string>Hex</string>
+				</property>
+				<property>
+					<name>Start Address</name>
+					<string>0x003FB960</string>
+					<property>
+						<name>Page</name>
+						<string>Data</string>
+					</property>
+				</property>
+				<property>
+					<name>Length</name>
+					<string>0x00000001</string>
+				</property>
+			</property>
+			<property>
+				<name>Group</name>
+				<string>Default Group</string>
+			</property>
+			<property>
+				<name>Name</name>
+				<string>Software</string>
+			</property>
+		</property>
+		<enabled>1</enabled>
+	</breakpoint>
+	<breakpoint type="Software">
+		<property>
+			<name>Physical Properties</name>
+			<property>
+				<name>Location</name>
+				<location>
+					<expression>4171449</expression>
+					<page>0</page>
+				</location>
+			</property>
+		</property>
+		<property>
+			<name>Logical Properties</name>
+			<property>
+				<name>Condition</name>
+				<string></string>
+			</property>
+			<property>
+				<name>Skip Count</name>
+				<integer>0</integer>
+				<property>
+					<name>Current Count</name>
+					<integer>0</integer>
+				</property>
+			</property>
+			<property>
+				<name>Action</name>
+				<string>Write Data to File</string>
+				<property>
+					<name>File</name>
+					<file>C:\Documents and Settings\Administrator\My Documents\Dropbox\masc\research\adc_bad_sensors\bad_sensors\Debug_RAM\vdc_meas.dat</file>
+				</property>
+				<property>
+					<name>Format</name>
+					<string>Hex</string>
+				</property>
+				<property>
+					<name>Start Address</name>
+					<string>0x003FB94C</string>
+					<property>
+						<name>Page</name>
+						<string>Data</string>
+					</property>
+				</property>
+				<property>
+					<name>Length</name>
+					<string>0x00000002</string>
+				</property>
+			</property>
+			<property>
+				<name>Group</name>
+				<string>Default Group</string>
+			</property>
+			<property>
+				<name>Name</name>
+				<string>Software</string>
+			</property>
+		</property>
+		<enabled>1</enabled>
+	</breakpoint>
+	<breakpoint type="Software">
+		<property>
+			<name>Physical Properties</name>
+			<property>
+				<name>Location</name>
+				<location>
+					<expression>4171449</expression>
+					<page>0</page>
+				</location>
+			</property>
+		</property>
+		<property>
+			<name>Logical Properties</name>
+			<property>
+				<name>Condition</name>
+				<string></string>
+			</property>
+			<property>
+				<name>Skip Count</name>
+				<integer>0</integer>
+				<property>
+					<name>Current Count</name>
+					<integer>0</integer>
+				</property>
+			</property>
+			<property>
+				<name>Action</name>
+				<string>Write Data to File</string>
+				<property>
+					<name>File</name>
+					<file>C:\Documents and Settings\Administrator\My Documents\Dropbox\masc\research\adc_bad_sensors\bad_sensors\Debug_RAM\iac_meas.dat</file>
+				</property>
+				<property>
+					<name>Format</name>
+					<string>Hex</string>
+				</property>
+				<property>
+					<name>Start Address</name>
+					<string>0x003FB968</string>
+					<property>
+						<name>Page</name>
+						<string>Data</string>
+					</property>
+				</property>
+				<property>
+					<name>Length</name>
+					<string>0x00000002</string>
+				</property>
+			</property>
+			<property>
+				<name>Group</name>
+				<string>Default Group</string>
+			</property>
+			<property>
+				<name>Name</name>
+				<string>Software</string>
+			</property>
+		</property>
+		<enabled>1</enabled>
+	</breakpoint>
+	<breakpoint type="Software">
+		<property>
+			<name>Physical Properties</name>
+			<property>
+				<name>Location</name>
+				<location>
+					<expression>4171449</expression>
+					<page>0</page>
+				</location>
+			</property>
+		</property>
+		<property>
+			<name>Logical Properties</name>
+			<property>
+				<name>Condition</name>
+				<string></string>
+			</property>
+			<property>
+				<name>Skip Count</name>
+				<integer>0</integer>
+				<property>
+					<name>Current Count</name>
+					<integer>0</integer>
+				</property>
+			</property>
+			<property>
+				<name>Action</name>
+				<string>Write Data to File</string>
+				<property>
+					<name>File</name>
+					<file>C:\Documents and Settings\Administrator\My Documents\Dropbox\masc\research\adc_bad_sensors\bad_sensors\Debug_RAM\vac_meas.dat</file>
+				</property>
+				<property>
+					<name>Format</name>
+					<string>Hex</string>
+				</property>
+				<property>
+					<name>Start Address</name>
+					<string>0x003FB964</string>
+					<property>
+						<name>Page</name>
+						<string>Data</string>
+					</property>
+				</property>
+				<property>
+					<name>Length</name>
+					<string>0x00000002</string>
+				</property>
+			</property>
+			<property>
+				<name>Group</name>
+				<string>Default Group</string>
+			</property>
+			<property>
+				<name>Name</name>
+				<string>Software</string>
+			</property>
+		</property>
+		<enabled>1</enabled>
+	</breakpoint>
+</breakpoints>
+

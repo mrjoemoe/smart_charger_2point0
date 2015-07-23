@@ -1,0 +1,51 @@
+Added Component: Designator=*(Res_Vishay_5W)
+Added Component: Designator=*(LV20P)
+Added Component: Designator=C1(CAPR5-4X5)
+Added Component: Designator=C2(CAPR5-4X5)
+Added Component: Designator=OA1(AD8032A)
+Added Component: Designator=R2(AXIAL-0.3)
+Added Component: Designator=R3(AXIAL-0.3)
+Added Component: Designator=R4(AXIAL-0.3)
+Added Component: Designator=R5(AXIAL-0.3)
+Added Component: Designator=R6(AXIAL-0.3)
+Added Component: Designator=R7(AXIAL-0.3)
+Added Pin To Net: NetName=+15V Pin=*-+15V
+Added Pin To Net: NetName=-15V Pin=*--15V
+Added Pin To Net: NetName=GND1 Pin=C1-2
+Added Pin To Net: NetName=GND1 Pin=C2-2
+Added Pin To Net: NetName=GND1 Pin=OA1-4
+Added Pin To Net: NetName=5V1 Pin=OA1-8
+Added Pin To Net: NetName=GND1 Pin=R2-1
+Added Pin To Net: NetName=5V1 Pin=R5-2
+Added Pin To Net: NetName=GND1 Pin=R6-1
+Added Net: Name=Net*_1
+Added Pin To Net: NetName=Net*_2 Pin=*-HV+
+Added Net: Name=Net*_2
+Added Pin To Net: NetName=Net*_HV- Pin=*-HV-
+Added Net: Name=Net*_HV-
+Added Pin To Net: NetName=Net*_M Pin=*-M
+Added Pin To Net: NetName=Net*_M Pin=R2-2
+Added Pin To Net: NetName=Net*_M Pin=R3-2
+Added Net: Name=Net*_M
+Added Pin To Net: NetName=NetC1_1 Pin=C1-1
+Added Pin To Net: NetName=NetC1_1 Pin=OA1-3
+Added Pin To Net: NetName=NetC1_1 Pin=R5-1
+Added Pin To Net: NetName=NetC1_1 Pin=R6-2
+Added Net: Name=NetC1_1
+Added Pin To Net: NetName=NetC2_1 Pin=C2-1
+Added Pin To Net: NetName=NetC2_1 Pin=R7-1
+Added Net: Name=NetC2_1
+Added Pin To Net: NetName=NetOA1_1 Pin=OA1-1
+Added Pin To Net: NetName=NetOA1_1 Pin=OA1-5
+Added Pin To Net: NetName=NetOA1_1 Pin=R4-1
+Added Net: Name=NetOA1_1
+Added Pin To Net: NetName=NetOA1_2 Pin=OA1-2
+Added Pin To Net: NetName=NetOA1_2 Pin=R3-1
+Added Pin To Net: NetName=NetOA1_2 Pin=R4-2
+Added Net: Name=NetOA1_2
+Added Pin To Net: NetName=NetOA1_6 Pin=OA1-6
+Added Pin To Net: NetName=NetOA1_6 Pin=OA1-7
+Added Pin To Net: NetName=NetOA1_6 Pin=R7-2
+Added Net: Name=NetOA1_6
+Added Class: Name=sensing_circuits
+Added Room: Name=sensing_circuits

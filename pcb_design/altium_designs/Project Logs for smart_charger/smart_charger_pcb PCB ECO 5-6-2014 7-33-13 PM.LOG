@@ -1,0 +1,4 @@
+Added Component: Designator=R8S(Res_Vishay_5W)
+Added Pin To Net: NetName=NetR8S_1 Pin=R8S-1
+Added Pin To Net: NetName=NetR8S_2 Pin=R8S-2
+Added Member To Class: ClassName=sensing_circuits Member=Component R8S R8

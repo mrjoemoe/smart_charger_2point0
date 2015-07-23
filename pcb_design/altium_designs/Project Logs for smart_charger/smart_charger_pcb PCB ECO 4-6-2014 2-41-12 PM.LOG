@@ -1,0 +1,25 @@
+Removed Pin From Net: NetName=IGBT1 Pin=GATE1-1
+Removed Pin From Net: NetName=IGBT2 Pin=GATE2-1
+Removed Pin From Net: NetName=IGBT3 Pin=GATE3-1
+Removed Pin From Net: NetName=IGBT4 Pin=GATE4-1
+Removed Pin From Net: NetName=IGBT5 Pin=GATE5-1
+Removed Pin From Net: NetName=IGBT6 Pin=GATE6-1
+Change Net Name : Old Net Name=NetGATE1_2 New Net Name=GATE1
+Change Net Name : Old Net Name=NetGATE2_2 New Net Name=GATE2
+Change Net Name : Old Net Name=NetGATE3_2 New Net Name=GATE3
+Change Net Name : Old Net Name=NetGATE4_2 New Net Name=GATE4
+Change Net Name : Old Net Name=NetGATE5_2 New Net Name=GATE5
+Change Net Name : Old Net Name=NetGATE6_2 New Net Name=GATE6
+Added Pin To Net: NetName=EM1 Pin=GATE1-1
+Added Net: Name=EM1
+Added Pin To Net: NetName=EM2 Pin=GATE2-1
+Added Net: Name=EM2
+Added Pin To Net: NetName=EM3 Pin=GATE3-1
+Added Net: Name=EM3
+Added Pin To Net: NetName=EM4 Pin=GATE4-1
+Added Net: Name=EM4
+Added Pin To Net: NetName=EM5 Pin=GATE5-1
+Added Net: Name=EM5
+Added Pin To Net: NetName=EM6 Pin=GATE6-1
+Added Net: Name=EM6
+Added Room: Name=power_supplies

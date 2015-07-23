@@ -1,0 +1,1711 @@
+!<arch>
+<filenames>/    0           1     0     0       317       `
+
+ADC_1ChContDrvCnf.c/
+ADC_2ChContDrvCnf.c/
+ADC_5ChContDrvCnf.c/
+ADC_6ChContDrvCnf.c/
+PWM_BuckDrvCnf.c/
+PWM_DrvGlobalVars.c/
+PWM_DrvTimeBasePeriodCnf.c/
+PWM_HrBuckDrvCnf.c/
+PWM_HrBuckDrvCnfV2.c/
+PWM_HrPSFBDrvCnf.c/
+PWM_HrPwmDacDrvCnf.c/
+PWM_MPILDrvCnf.c/
+PWM_PFC2PHILDrvCnf.c/
+PWM_PFC2PHILDrvCnf1.c/
+PWM_PSFBDrvCnf.c/
+
+ADC_1ChContDrvC/1149260347  1     0     0       3478      `
+//----------------------------------------------------------------------------------
+//	FILE:			ADC_1ChContDrvCnf.C
+//
+//	Description:	ADC Interface driver config to support a Single continuous
+//					Conversion.	This function allows Channel selection and S/H
+//					acquisition window width programming
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern void DSP28x_usDelay(unsigned long Count);
+
+#define ADC_usDELAY  5000L
+#define ADC_usDELAY2  20L
+
+//============================================================================
+//	ADC1CONTCnf(c1, AcqWidth)  configuration function for ADC1CONT_DRV driver
+//============================================================================
+//			_______________________
+//			|	  ADC1CONT_DRV	  |
+//			|~~~~~~~~~~~~~~~~~~~~~|
+//		 <--| Rslt	   	   ADCINx |<--
+//		 	|		  	   		  |
+//			|_____________________|
+//
+// Description:
+// ------------
+// ADC peripheral Driver Configuration for a 1 ch conversion
+// Arguments c1 can be any channel number between 0 and 15
+// Argument AcqWidth is the S/H aperture in #ADCCLKS, i.e.
+// 							AcqWidth = 1 gives = 1 ADCCLK
+// 							AcqWidth = 2 gives = 2 ADCCLK
+// 							AcqWidth = 3 gives = 3 ADCCLK....etc
+//							Note: valid values are 1-16
+//
+//============================================================================
+
+void ADC1CONTCnf(int c1, int AcqWidth)
+{
+// To powerup the ADC the ADCENCLK bit should be set first to enable
+// clocks, followed by powering up the bandgap and reference circuitry.
+// After a 5ms delay the rest of the ADC can be powered up. After ADC
+// powerup, another 20us delay is required before performing the first
+// ADC conversion. 
+
+// ADC power-up sequence		
+	AdcRegs.ADCTRL3.bit.ADCBGRFDN = 0x3;	// Power up bandgap/reference circuitry
+	AdcRegs.ADCTRL3.bit.ADCPWDN = 0x1;		// Power up rest of ADC
+	DSP28x_usDelay(ADC_usDELAY);            // Delay after powering up ADC
+
+// ADC Acquisition window select and Channel allocation
+    //SysCtrlRegs.HISPCP.all = 0x0002;		// Div 4 = 25 MHz
+	AdcRegs.ADCTRL3.bit.ADCCLKPS=1;			// ADCCLK=6.5 MHz @ HSCLK=25MHz
+	AdcRegs.ADCTRL1.bit.ACQ_PS=(AcqWidth-1);// Window aperture in ADCCLKS
+
+// ADC Sequencer and Interrupt Init
+    AdcRegs.ADCTRL1.bit.SEQ_CASC = 1;		// Single 16 state sequencer
+    AdcRegs.ADCTRL1.bit.SEQ_OVRD = 0;		// Allow wrap-around
+    AdcRegs.ADCTRL1.bit.CONT_RUN = 1;		// Continuous mode
+
+// # of Conversions & Input channel Allocation
+    AdcRegs.ADCMAXCONV.all = 0x0;			// #conversions = 1
+	AdcRegs.ADCCHSELSEQ1.bit.CONV00=c1;		// ADCIN"c1" channel (1st proper conv)
+    AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;		// Kick-start the ADC
+}
+ADC_2ChContDrvC/1149260347  22    0     0       3537      `
+//----------------------------------------------------------------------------------
+//	FILE:			ADC_2ChContDrvCnf.C
+//
+//	Description:	ADC Interface driver config to support a Dual continuous
+//					Conversion.	This function allows Channel selections and S/H
+//					acquisition window width programming
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern void DSP28x_usDelay(unsigned long Count);
+
+#define ADC_usDELAY  5000L
+#define ADC_usDELAY2  20L
+
+
+//============================================================================
+//	ADC2CONTCnf(c1, c2, AcqWidth)  config function for ADC2CONT_DRV driver
+//============================================================================
+//			_______________________
+//			|	  ADC2CONT_DRV	  |
+//			|~~~~~~~~~~~~~~~~~~~~~|
+//		 <--| Rslt[0:1]	   ADCINx |<--
+//		 	|		  	   ADCINy |<--
+//			|_____________________|
+//
+// Description:
+// ------------
+// ADC peripheral Driver Configuration for a 2 ch conversion
+// Arguments c1, c2 can be any channel number between 0 and 15
+// c1 is 1st conversion, c2 is 2nd.
+// Argument AcqWidth is the S/H aperture in #ADCCLKS, i.e.
+// 							AcqWidth = 1 gives = 1 ADCCLK
+// 							AcqWidth = 2 gives = 2 ADCCLK
+// 							AcqWidth = 3 gives = 3 ADCCLK....etc
+//							Note: valid values are 1-16
+//============================================================================
+
+void ADC2CONTCnf(int c1, int c2, int AcqWidth)
+{
+// To powerup the ADC the ADCENCLK bit should be set first to enable
+// clocks, followed by powering up the bandgap and reference circuitry.
+// After a 5ms delay the rest of the ADC can be powered up. After ADC
+// powerup, another 20us delay is required before performing the first
+// ADC conversion. 
+
+// ADC power-up sequence		
+	AdcRegs.ADCTRL3.bit.ADCBGRFDN = 0x3;	// Power up bandgap/reference circuitry
+	AdcRegs.ADCTRL3.bit.ADCPWDN = 0x1;		// Power up rest of ADC
+	DSP28x_usDelay(ADC_usDELAY);            // Delay after powering up ADC
+
+// ADC Acquisition window select and Channel allocation
+	AdcRegs.ADCTRL3.bit.ADCCLKPS=1;			// ADCCLK=6.25 MHz @ HSCLK=25MHz
+	AdcRegs.ADCTRL1.bit.ACQ_PS=(AcqWidth-1); // Window aperture in ADCCLKS
+
+// ADC Sequencer and Interrupt Init
+    AdcRegs.ADCTRL1.bit.SEQ_CASC = 1;		// Single 16 state sequencer
+    AdcRegs.ADCTRL1.bit.SEQ_OVRD = 0;		// Allow wrap-around
+    AdcRegs.ADCTRL1.bit.CONT_RUN = 1;		// Continuous mode
+
+// # of Conversions & Input channel Allocation
+    AdcRegs.ADCMAXCONV.all = 0x1;			// #conversions = 2
+	AdcRegs.ADCCHSELSEQ1.bit.CONV00=c1;		// ADCIN"c1" channel (1st conv)
+	AdcRegs.ADCCHSELSEQ1.bit.CONV01=c2;		// ADCIN"c2" channel (2nd conv)
+    AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;		// Kick-start the ADC
+}
+
+ADC_5ChContDrvC/1149260347  43    0     0       3961      `
+//----------------------------------------------------------------------------------
+//	FILE:			ADC_5ChContDrvCnf.C
+//
+//	Description:	ADC Interface driver config to supports 5 continuous
+//					Conversions. This function allows Channel selections and S/H
+//					acquisition window width programming
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  09/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern void DSP28x_usDelay(unsigned long Count);
+
+#define ADC_usDELAY  5000L
+#define ADC_usDELAY2  20L
+
+
+//================================================================================
+//	ADC5CONTCnf(c1, c2, c3, c4, c5, AcqWidth)  config function for ADC2CONT_DRV driver
+//================================================================================
+//			_______________________
+//			|	  ADC4CONT_DRV	  |
+//			|~~~~~~~~~~~~~~~~~~~~~|
+//		 <--| Rslt[0:4]	   ADCINu |<--
+//		 	|		  	   ADCINv |<--
+//		 	|		  	   ADCINw |<--
+//		 	|		  	   ADCINx |<--
+//		 	|		  	   ADCINy |<--
+//			|_____________________|
+//
+// Description:
+// ------------
+// ADC peripheral Driver Configuration for a 5 ch conversion
+// Arguments c1, c2, c3, c4, c5 can be any channel number between 0 and 15
+// c1 is 1st conversion, c2 is 2nd, c3 is 3rd,...etc
+// Argument AcqWidth is the S/H aperture in #ADCCLKS, i.e.
+// 							AcqWidth = 1 gives = 1 ADCCLK
+// 							AcqWidth = 2 gives = 2 ADCCLK
+// 							AcqWidth = 3 gives = 3 ADCCLK....etc
+//							Note: valid values are 1-16
+//============================================================================
+// Configures ADC for continuous acquisition
+void ADC5CONTCnf(int c1, int c2,  int c3, int c4, int c5, int AcqWidth)
+{
+// To powerup the ADC the ADCENCLK bit should be set first to enable
+// clocks, followed by powering up the bandgap and reference circuitry.
+// After a 5ms delay the rest of the ADC can be powered up. After ADC
+// powerup, another 20us delay is required before performing the first
+// ADC conversion. 
+
+// ADC power-up sequence		
+	AdcRegs.ADCTRL3.bit.ADCBGRFDN = 0x3;	// Power up bandgap/reference circuitry
+	AdcRegs.ADCTRL3.bit.ADCPWDN = 0x1;		// Power up rest of ADC
+	DSP28x_usDelay(ADC_usDELAY);            // Delay after powering up ADC
+
+// ADC Acquisition window select and Channel allocation
+	AdcRegs.ADCTRL3.bit.ADCCLKPS=1;			// ADCCLK=6.25 MHz @ HSCLK=25MHz
+	AdcRegs.ADCTRL1.bit.ACQ_PS=(AcqWidth-1); // Window aperture in ADCCLKS
+
+// ADC Sequencer and Interrupt Init
+    AdcRegs.ADCTRL1.bit.SEQ_CASC = 1;		// Single 16 state sequencer
+    AdcRegs.ADCTRL1.bit.SEQ_OVRD = 0;		// Allow wrap-around
+    AdcRegs.ADCTRL1.bit.CONT_RUN = 1;		// Continuous mode
+
+// # of Conversions & Input channel Allocation
+    AdcRegs.ADCMAXCONV.all = 0x5;			// #conversions = 6
+	AdcRegs.ADCCHSELSEQ1.bit.CONV00=c1;		// ADCIN"c1" channel (1st conv)
+	AdcRegs.ADCCHSELSEQ1.bit.CONV01=c2;		// ADCIN"c2" channel (2nd conv)
+	AdcRegs.ADCCHSELSEQ1.bit.CONV02=c3;		// ADCIN"c3" channel (3rd conv)
+	AdcRegs.ADCCHSELSEQ1.bit.CONV03=c4;		// ADCIN"c4" channel (4th conv)
+	AdcRegs.ADCCHSELSEQ2.bit.CONV04=c5;		// ADCIN"c5" channel (5th conv)
+    AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;		// Kick-start the ADC
+}
+
+
+
+
+
+
+
+ADC_6ChContDrvC/1149260347  64    0     0       3962      `
+//----------------------------------------------------------------------------------
+//	FILE:			ADC_6ChContDrvCnf.C
+//
+//	Description:	ADC Interface driver config to support a Dual continuous
+//					Conversion.	This function allows Channel selections and S/H
+//					acquisition window width programming
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern void DSP28x_usDelay(unsigned long Count);
+
+#define ADC_usDELAY  5000L
+#define ADC_usDELAY2  20L
+
+
+//============================================================================
+//	ADC6CONTCnf(c1, c2, AcqWidth)  config function for ADC2CONT_DRV driver
+//============================================================================
+//			_______________________
+//			|	  ADC2CONT_DRV	  |
+//			|~~~~~~~~~~~~~~~~~~~~~|
+//		 <--| Rslt[0:1]	   ADCINx |<--
+//		 	|		  	   ADCINy |<--
+//			|_____________________|
+//
+// Description:
+// ------------
+// ADC peripheral Driver Configuration for a 2 ch conversion
+// Arguments c1, c2 can be any channel number between 0 and 15
+// c1 is 1st conversion, c2 is 2nd.
+// Argument AcqWidth is the S/H aperture in #ADCCLKS, i.e.
+// 							AcqWidth = 1 gives = 1 ADCCLK
+// 							AcqWidth = 2 gives = 2 ADCCLK
+// 							AcqWidth = 3 gives = 3 ADCCLK....etc
+//							Note: valid values are 1-16
+//============================================================================
+
+void ADC6CONTCnf(	Uint16 ChNum1,
+					Uint16 ChNum2,
+					Uint16 ChNum3,
+					Uint16 ChNum4,
+					Uint16 ChNum5,
+					Uint16 ChNum6,
+					Uint16 AcqWidth)
+{
+// To powerup the ADC the ADCENCLK bit should be set first to enable
+// clocks, followed by powering up the bandgap and reference circuitry.
+// After a 5ms delay the rest of the ADC can be powered up. After ADC
+// powerup, another 20us delay is required before performing the first
+// ADC conversion. 
+
+// ADC power-up sequence		
+	AdcRegs.ADCTRL3.bit.ADCBGRFDN = 0x3;	// Power up bandgap/reference circuitry
+	AdcRegs.ADCTRL3.bit.ADCPWDN = 0x1;		// Power up rest of ADC
+	DSP28x_usDelay(ADC_usDELAY);            // Delay after powering up ADC
+
+// ADC Acquisition window select and Channel allocation
+	AdcRegs.ADCTRL3.bit.ADCCLKPS=1;			// ADCCLK=6.25 MHz @ HSCLK=25MHz
+	AdcRegs.ADCTRL1.bit.ACQ_PS=(AcqWidth-1); // Window aperture in ADCCLKS
+
+// ADC Sequencer and Interrupt Init
+    AdcRegs.ADCTRL1.bit.SEQ_CASC = 1;		// Single 16 state sequencer
+    AdcRegs.ADCTRL1.bit.SEQ_OVRD = 0;		// Allow wrap-around
+    AdcRegs.ADCTRL1.bit.CONT_RUN = 1;		// Continuous mode
+
+// # of Conversions & Input channel Allocation
+    AdcRegs.ADCMAXCONV.all = 0x5;			// #conversions = 5
+	AdcRegs.ADCCHSELSEQ1.bit.CONV00=ChNum1;		// ADCIN"c1" channel (1st conv)
+	AdcRegs.ADCCHSELSEQ1.bit.CONV01=ChNum2;		// ADCIN"c2" channel (2nd conv)
+	AdcRegs.ADCCHSELSEQ1.bit.CONV02=ChNum3;		// ADCIN"c2" channel (2nd conv)
+	AdcRegs.ADCCHSELSEQ1.bit.CONV03=ChNum4;		// ADCIN"c2" channel (2nd conv)
+	AdcRegs.ADCCHSELSEQ2.bit.CONV04=ChNum5;		// ADCIN"c2" channel (2nd conv)
+	AdcRegs.ADCCHSELSEQ2.bit.CONV05=ChNum6;		// ADCIN"c2" channel (2nd conv)
+	
+    AdcRegs.ADCTRL2.bit.SOC_SEQ1 = 1;		// Kick-start the ADC
+}
+PWM_BuckDrvCnf./1149261266  85    0     0       3370      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_BuckDrvCnf.C
+//
+//	Description:	EPWM Interface driver config to support a simple Buck topology.
+//					This function allows init of period i.e. PWM frequency, and
+//					defines the target EPWM module.
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+//  06/02/06  | Release 2.0  		Changed reload condition to CNTR=PRD
+//----------------------------------------------------------------------------------
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+//============================================================================
+//	BuckDrvCnf(n, period)  configuration function for BUCK_DRV driver
+//============================================================================
+//						SyncIn
+//						   |
+//				___________|___________
+//				|	  	BUCK_DRV      |
+//				|~~~~~~~~~~~~~~~~~~~~~|
+//			 -->| DutyA 	   EPWMnA |--> regular output A
+//			 	|			 	      |
+//			 -->| DutyB	  	   EPWMnB |--> regular output B
+//				|_____________________|
+//						   |
+//						   |
+//						SyncOut
+//
+// Description:
+// ------------
+// PWM peripheral Driver Configuration for Buck converter modulation
+// Has 2 independent Buck channels with same Period (Frequency)
+// The function call is:
+//
+// BuckDrvCnf(int16 n, int16 period)
+//
+// Where: 
+// n: 1st ePWM target module (i.e. Master)
+// Period: defines the PWM period or frequency. See Module doc.
+// e.g. if n=2, Then EPWM2 is the target module
+//
+//---------------------------------------------------------------------------
+void BuckDrvCnf(int16 n, int16 period)
+{
+	(*ePWM[n]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n]).TBPRD = period;					// PWM frequency = 1 / period
+	(*ePWM[n]).CMPA.half.CMPA = 0;				// set duty 0% initially
+	(*ePWM[n]).CMPB = 0;						// set duty 0% initially
+	(*ePWM[n]).TBPHS.half.TBPHS = 0;
+	(*ePWM[n]).TBCTR = 0;
+
+	(*ePWM[n]).TBCTL.bit.CTRMODE = TB_COUNT_UP;		// Asymmetrical
+	(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;		// EPWMn is the Master
+	(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+	(*ePWM[n]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n]).CMPCTL.bit.LOADAMODE = CC_CTR_PRD;
+	(*ePWM[n]).CMPCTL.bit.LOADBMODE = CC_CTR_PRD;
+	(*ePWM[n]).CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	(*ePWM[n]).CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+	
+	(*ePWM[n]).AQCTLA.bit.ZRO = AQ_SET;
+	(*ePWM[n]).AQCTLA.bit.CAU = AQ_CLEAR;
+	(*ePWM[n]).AQCTLB.bit.ZRO = AQ_SET;
+	(*ePWM[n]).AQCTLB.bit.CBU = AQ_CLEAR; 
+}
+PWM_DrvGlobalVa/1149260347  103   0     0       1231      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_DrvGlobalVars.C
+//
+//	Description:	Contains shared global variables for the PWM drivers
+//					converter driver
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+
+volatile struct EPWM_REGS *ePWM[] = 
+ 				  { &EPwm1Regs,
+					&EPwm1Regs,
+					&EPwm2Regs,
+					&EPwm3Regs,
+					&EPwm4Regs,
+					&EPwm5Regs,
+					&EPwm6Regs};
+
+PWM_DrvTimeBase/1149260347  124   0     0       2246      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_drvTimeBasePeriodCnf.C
+//
+//	Description:	Contains the time base intialization for the PWM driver.
+//					converter driver
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+
+//============================================================================
+//	TimeBasePeriodCnf - Simple Timebase only config for ePWMn module
+//============================================================================
+//
+// Description:
+// ------------
+// Init ePWMn to run at a given period.  Useful for slaving ISRs.
+//
+// Revision History:
+//---------------------------------------------------------------------------
+// Date		| Author	| Description
+//---------------------------------------------------------------------------
+// 11 Feb05	| DAF		| Original
+// __________________________________________________________________________
+
+void TimeBasePeriodCnf(int16 n, int16 period)
+{
+	(*ePWM[n]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n]).TBPRD = period;		// PWM frequency = 1 / period
+	(*ePWM[n]).TBPHS.all = 0;
+	(*ePWM[n]).TBCTR = 0;
+
+	(*ePWM[n]).TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
+	(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;		
+	(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+	(*ePWM[n]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n]).TBCTL.bit.CLKDIV = TB_DIV1;
+}
+
+PWM_HrBuckDrvCn/1149261198  152   0     0       3745      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_HrBuckDrvCnf.C
+//
+//	Description:	Contains the init code for the high resolution buck
+//					converter driver
+//
+//	Version: 		2.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+//  06/02/06  | Release 2.0  		Changed reload condition to CNTR=PRD
+//----------------------------------------------------------------------------------
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+// Modules Included here are:
+//=============================================
+//	6)  HrBuckDrvCnf(int16 n, int16 period)
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//	HiRes PWM module drivers
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+//============================================================================
+//	HrBuckDrvCnf  configuration function for HRBUCK_DRV driver
+//============================================================================
+//						SyncIn
+//						   |
+//				___________|___________
+//				|	  HRBUCK_DRV      |
+//				|~~~~~~~~~~~~~~~~~~~~~|
+//			 	| 			   EPWM1A |--> HiRes capable output
+//			 	| 		  	     	  |
+//			 	| 		  	   EPWM1B |--> regular output
+//				|_____________________|
+//						   |
+//						   |
+//						SyncOut
+// Description:
+// ------------
+// PWM peripheral Driver Configuration for HiRes Buck converter modulation
+//
+// Revision History:
+//---------------------------------------------------------------------------
+// Date		| Author	| Description
+//---------------------------------------------------------------------------
+// 10/27/04	| DAF		| Original
+// 12/02/04	| DAF		| Added Instance and Period arguments
+// __________________________________________________________________________
+
+void HrBuckDrvCnf(int16 n, int16 period)
+{
+	(*ePWM[n]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n]).TBPRD = period;		// PWM frequency = 1 / (period+1)
+	(*ePWM[n]).CMPA.half.CMPA = 0;	// set duty 0% initially
+	(*ePWM[n]).CMPB = 0;			// set duty 0% initially
+	(*ePWM[n]).TBPHS.half.TBPHS = 0;
+	(*ePWM[n]).TBCTR = 0;
+
+	(*ePWM[n]).TBCTL.bit.CTRMODE = TB_COUNT_UP;
+	(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;		// EPWM1 is the Master
+	(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+	(*ePWM[n]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n]).CMPCTL.bit.LOADAMODE = CC_CTR_PRD;
+	(*ePWM[n]).CMPCTL.bit.LOADBMODE = CC_CTR_PRD;
+	(*ePWM[n]).CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	(*ePWM[n]).CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+	
+	(*ePWM[n]).AQCTLA.bit.ZRO = AQ_SET;
+	(*ePWM[n]).AQCTLA.bit.CAU = AQ_CLEAR;
+	(*ePWM[n]).AQCTLB.bit.ZRO = AQ_SET;
+	(*ePWM[n]).AQCTLB.bit.CBU = AQ_CLEAR; 
+
+	EALLOW;		
+	(*ePWM[n]).HRCNFG.all = 0x0;	
+	(*ePWM[n]).HRCNFG.bit.EDGMODE = HR_FEP;
+	(*ePWM[n]).HRCNFG.bit.CTLMODE = HR_CMP;
+	(*ePWM[n]).HRCNFG.bit.HRLOAD = HR_CTR_ZERO;
+	EDIS;	
+}
+
+PWM_HrBuckDrvCn/1149261165  172   0     0       3730      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_HrBuckDrvCnf.C
+//
+//	Description:	Contains the init code for the high resolution buck
+//					converter driver
+//
+//	Version: 		2.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+//  06/02/06  | Release 2.0  		Changed reload condition to CNTR=PRD
+//----------------------------------------------------------------------------------
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+//============================================================================
+//	HrBuckDrvCnfV2(n, period, mode, phase) 
+//============================================================================
+//						SyncIn
+//						   |
+//				___________|___________
+//				|	  HRBUCK_DRV      |
+//				|~~~~~~~~~~~~~~~~~~~~~|
+//			 	| 			   EPWM1A |--> HiRes capable output
+//			 	| 		  	     	  |
+//			 	| 		  	   EPWM1B |--> regular output
+//				|_____________________|
+//						   |
+//						   |
+//						SyncOut
+// Description:
+// ------------
+// PWM peripheral Driver Configuration for HiRes Buck converter modulation
+//
+// Function arguments defined as:
+//-------------------------------
+// n = 		Target ePWM module,  e.g. if n=2, then target is ePWM2
+// period = PWM period in Sysclks
+// mode =	Master/Slave mode, e.g. mode=1 for master, mode=0 for slave
+// phase =	phase offset from upstream master in Sysclks,
+//			applicable only if mode=0, i.e. slave
+//============================================================================
+void HrBuckDrvCnfV2(int16 n, int16 period, int16 mode, int16 phase)
+{
+	(*ePWM[n]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n]).TBPRD = period;	// PWM frequency = 1 / period
+	(*ePWM[n]).TBPHS.half.TBPHS = 0;
+	(*ePWM[n]).CMPA.half.CMPA = 0;	// set duty 0% initially
+	(*ePWM[n]).CMPB = 0;		// set duty 0% initially
+	(*ePWM[n]).TBCTR = 0;
+	(*ePWM[n]).TBCTL.bit.CTRMODE = TB_COUNT_UP;
+	(*ePWM[n]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	if(mode == 1) // config as a Master
+	{
+		(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;
+		(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; // sync "down-stream" 
+	}
+
+	if(mode == 0) // config as a Slave
+	{
+		(*ePWM[n]).TBCTL.bit.PHSEN = TB_ENABLE;
+		(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
+		(*ePWM[n]).TBPHS.half.TBPHS = (period - phase);	// set phase = 360 - lag
+	}
+
+	(*ePWM[n]).CMPCTL.bit.LOADAMODE = CC_CTR_PRD;
+	(*ePWM[n]).CMPCTL.bit.LOADBMODE = CC_CTR_PRD;
+	(*ePWM[n]).CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	(*ePWM[n]).CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+	
+	(*ePWM[n]).AQCTLA.bit.ZRO = AQ_SET;
+	(*ePWM[n]).AQCTLA.bit.CAU = AQ_CLEAR;
+	(*ePWM[n]).AQCTLB.bit.ZRO = AQ_SET;
+	(*ePWM[n]).AQCTLB.bit.CBU = AQ_CLEAR; 
+
+	EALLOW;		
+	(*ePWM[n]).HRCNFG.all = 0x0;	
+	(*ePWM[n]).HRCNFG.bit.EDGMODE = HR_FEP;
+	(*ePWM[n]).HRCNFG.bit.CTLMODE = HR_CMP;
+	(*ePWM[n]).HRCNFG.bit.HRLOAD = HR_CTR_ZERO;
+	EDIS;	
+}
+
+
+PWM_HrPSFBDrvCn/1149260348  194   0     0       5384      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_HrPSFBDrvCnf.c
+//
+//	Description:	??????????????????????????????
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+// Modules Included here are:
+//----------------------------------------------------------------------------------
+//	9)  HrPSFBDrvCnf(int16 n, int16 period)
+
+//----------------------------------------------------------------------------------
+//	HrPSFBDrvCnf  configuration function for HR_ZVSFB_DRV driver ePWMn module
+//----------------------------------------------------------------------------------
+//
+//						SyncIn
+//						   |
+//				___________|___________
+//				|	 HR_PSFB_DRV	  |
+//				|~~~~~~~~~~~~~~~~~~~~~|
+//		 	 -->| 			   EPWMnA |--> (right leg upper switch)
+//		 	 -->| 		  	   EPWMnB |--> (right leg Lower switch)
+//		 	 -->| 		   EPWM(n+1)A |--> (left leg upper switch)
+//		 	 -->| 		   EPWM(n+2)A |--> (left leg Lower switch)
+//				|_____________________|
+//						   |
+//						   |
+//						SyncOut
+//
+// Description:
+// ------------
+// PWM peripheral Driver Configuration for HiRes PSFB modulation
+// Config can be targetted to any consecutive pairs of ePWM modules
+// For 2801 n=1 max, for 2806/08 n=1 or 2
+//
+//----------------------------------------------------------------------------------
+
+void HrPSFBDrvCnf(int16 n, int16 period)
+{
+// n = the ePWM module number, i.e. selects the target module for init.
+// ePWM(n) init.  Note EPWM(n) is the Master
+	(*ePWM[n]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n]).TBPRD = period;
+	(*ePWM[n]).CMPA.half.CMPA = period/2-20;		// Fix duty at 50% by using
+	(*ePWM[n]).CMPB = period-20;		//   both CMPA and CMPB
+	(*ePWM[n]).TBPHS.half.TBPHS = 0;
+	(*ePWM[n]).TBCTR = 0;
+
+	(*ePWM[n]).TBCTL.bit.CTRMODE = TB_COUNT_DOWN;
+	(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;
+	(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; //used to sync EPWM2 "down-stream"
+	(*ePWM[n]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n]).AQCTLA.bit.CAD = AQ_SET;
+	(*ePWM[n]).AQCTLA.bit.CBD = AQ_CLEAR;
+
+	(*ePWM[n]).DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+	(*ePWM[n]).DBCTL.bit.POLSEL = DB_ACTV_HIC;	// Active Hi Complimentary
+	(*ePWM[n]).DBRED = 10;	// dummy value for now
+	(*ePWM[n]).DBFED = 10;	// dummy value for now
+
+// ePWM(n+1) init.  EPWM(n+1) is a slave
+	(*ePWM[n+1]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n+1]).TBPRD = period;
+	(*ePWM[n+1]).CMPA.half.CMPA = period/2-18;		// Fix duty at 50% by using
+	(*ePWM[n+1]).CMPB = period-18;			//   both CMPA and CMPB
+	(*ePWM[n+1]).TBPHS.half.TBPHS = 0; // dummy phase initially
+	(*ePWM[n+1]).TBCTR = 0;
+
+	(*ePWM[n+1]).TBCTL.bit.CTRMODE = TB_COUNT_DOWN;
+	(*ePWM[n+1]).TBCTL.bit.PHSEN = TB_ENABLE;
+	(*ePWM[n+1]).TBCTL.bit.SYNCOSEL = TB_SYNC_IN; // Sync "flow through" mode
+	(*ePWM[n+1]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n+1]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n+1]).AQCTLA.bit.CAD = AQ_SET;
+	(*ePWM[n+1]).AQCTLA.bit.CBD = AQ_CLEAR;
+	
+	(*ePWM[n+1]).DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+	(*ePWM[n+1]).DBCTL.bit.POLSEL = DB_ACTV_HIC;	// Active Hi Complimentary
+	(*ePWM[n+1]).DBRED = 10;	// dummy value for now
+
+	EALLOW;		
+	(*ePWM[n+1]).HRCNFG.all = 0x0;	
+	(*ePWM[n+1]).HRCNFG.bit.EDGMODE = HR_BEP;
+	(*ePWM[n+1]).HRCNFG.bit.CTLMODE = HR_PHS;
+	(*ePWM[n+1]).HRCNFG.bit.HRLOAD = HR_CTR_ZERO;
+	EDIS;	
+
+// ePWM(n+2) init.  EPWM(n+2) is a slave
+	(*ePWM[n+2]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n+2]).TBPRD = period;
+	(*ePWM[n+2]).CMPA.half.CMPA = period/2-18;		// Fix duty at 50% by using
+	(*ePWM[n+2]).CMPB = period-18;			//   both CMPA and CMPB
+	(*ePWM[n+2]).TBPHS.half.TBPHS = 0; // dummy phase initially
+	(*ePWM[n+2]).TBCTR = 0;
+
+	(*ePWM[n+2]).TBCTL.bit.CTRMODE = TB_COUNT_DOWN;
+	(*ePWM[n+2]).TBCTL.bit.PHSEN = TB_ENABLE;
+	(*ePWM[n+2]).TBCTL.bit.SYNCOSEL = TB_SYNC_IN; // Sync "flow through" mode
+	(*ePWM[n+2]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n+2]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n+2]).AQCTLA.bit.CAD = AQ_CLEAR;
+	(*ePWM[n+2]).AQCTLA.bit.CBD = AQ_SET;
+	
+	(*ePWM[n+2]).DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+	(*ePWM[n+2]).DBCTL.bit.POLSEL = DB_ACTV_HIC;	// Active Hi Complimentary
+	(*ePWM[n+2]).DBRED = 10;	// dummy value for now
+
+	EALLOW;		
+	(*ePWM[n+2]).HRCNFG.all = 0x0;	
+	(*ePWM[n+2]).HRCNFG.bit.EDGMODE = HR_BEP;
+	(*ePWM[n+2]).HRCNFG.bit.CTLMODE = HR_PHS;
+	(*ePWM[n+2]).HRCNFG.bit.HRLOAD = HR_CTR_ZERO;
+	EDIS;	
+
+}
+PWM_HrPwmDacDrv/1149260348  214   0     0       3387      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_HrPWMDacDrvCnf.c
+//
+//	Description:	Contains the PWM driver for the high res PWM DAC function
+//					
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+
+
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+// Modules Included here are:
+//=============================================
+//	10) HrPwmDacDrvCnf(int16 n, int16 period)
+//============================================================================
+//	HrPwmDacDrvCnf  configuration function for HRPWM_DAC driver
+//============================================================================
+//						SyncIn
+//						   |
+//				___________|___________
+//				|	 HRPWM_DAC_DRV    |
+//				|~~~~~~~~~~~~~~~~~~~~~|
+//			 	| 			   EPWMnA |--> HiRes capable output
+//			 	| 		  	     	  |
+//			 	| 		  	   EPWMnB |--> regular output
+//				|_____________________|
+//						   |
+//						   |
+//						SyncOut
+// Description:
+// ------------
+// PWM peripheral Driver Configuration for HiRes PWM_DAC modulation
+//
+// Revision History:
+//---------------------------------------------------------------------------
+// Date		| Author	| Description
+//---------------------------------------------------------------------------
+// 10/27/04	| DAF		| Original
+// 12/02/04	| DAF		| Added Instance and Period arguments
+// __________________________________________________________________________
+
+void HrPwmDacDrvCnf(int16 n, int16 period)
+{
+	(*ePWM[n]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n]).TBPRD = period;	// set PWM operating frequency
+
+	(*ePWM[n]).CMPA.half.CMPA = period / 2; // set duty 50% initially
+	(*ePWM[n]).CMPB = period / 2; // set duty 50% initially
+	(*ePWM[n]).TBPHS.half.TBPHS = 0;
+	(*ePWM[n]).TBCTR = 0;
+
+	(*ePWM[n]).TBCTL.bit.CTRMODE = TB_COUNT_UP;
+	(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;
+	(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_SYNC_DISABLE;
+	(*ePWM[n]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n]).CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+	(*ePWM[n]).CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+	(*ePWM[n]).CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	(*ePWM[n]).CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+	
+	(*ePWM[n]).AQCTLA.bit.ZRO = AQ_SET;
+	(*ePWM[n]).AQCTLA.bit.CAU = AQ_CLEAR;
+	(*ePWM[n]).AQCTLB.bit.ZRO = AQ_SET;
+	(*ePWM[n]).AQCTLB.bit.CBU = AQ_CLEAR; 
+
+	EALLOW;		
+	(*ePWM[n]).HRCNFG.all = 0x0;	
+	(*ePWM[n]).HRCNFG.bit.EDGMODE = HR_FEP;
+	(*ePWM[n]).HRCNFG.bit.CTLMODE = HR_CMP;
+	(*ePWM[n]).HRCNFG.bit.HRLOAD = HR_CTR_ZERO;
+	EDIS;	
+}
+
+
+PWM_MPILDrvCnf./1149260348  236   0     0       3511      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_MPILDrvCnf.c
+//
+//	Description:	EPWM Interface driver to support a Multi-Phase Interleaved
+//					topology. This function allows control of # phases, and
+//					duty cycle.  Phases are automatically equally-spaced over 360 deg.
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+//==================================================================================
+//	MPILDrvCnf(n, N, period)  configuration function for MPHIL_DRV driver
+//==================================================================================
+//						SyncIn
+//						   |
+//				___________|___________
+//				|	   MPHIL_DRV	  |
+//				|~~~~~~~~~~~~~~~~~~~~~|
+//			 	| 		     EPWM(n)A |--> (phase1)
+//			 	| 		  	     	  |
+//			 -->| Duty	   EPWM(n+1)A |--> (phase2)
+//			 	| 		  	   :  	  |
+//			 	| 		  	   : 	  |
+//			 	| 		 EPWM(n+N-1)A |--> (phaseN)
+//				|_____________________|
+//						   |
+//						   |
+//						SyncOut
+// Description:
+// ------------
+// PWM peripheral Driver Configuration for Multiphase interleaved modulation
+// The function call is:
+//
+// MPILDrvCnf(int16 n, int16 N, int16 period)
+//
+// Where:
+// n: 1st ePWM target module (i.e. Master)
+// N: number of phases
+// 		e.g. if n=2, N=3, then  ePWM2 (phase1), ePWM3 (phase2), ePWM4 (phase3)
+// Period: defines the PWM period or frequency. See Module doc.
+//----------------------------------------------------------------------------------
+
+void MPILDrvCnf(int16 n, int16 N, int16 period)
+{
+int16	i,j;
+
+	j=0;
+
+	// Configure all modules as slaves initially, & set correct phase
+	for (i=n; i<(n+N); i++)
+	{
+		(*ePWM[i]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+		(*ePWM[i]).TBPRD = period;		// set PWM operating frequency
+		(*ePWM[i]).CMPA.half.CMPA = 0; 	// set duty 0% initially
+		(*ePWM[i]).TBPHS.half.TBPHS = period - period*j/N;
+		(*ePWM[i]).TBCTR = 0;
+
+		(*ePWM[i]).TBCTL.bit.CTRMODE = TB_COUNT_UP;
+		(*ePWM[i]).TBCTL.bit.PHSDIR = TB_DOWN;
+		(*ePWM[i]).TBCTL.bit.PHSEN = TB_ENABLE;
+		(*ePWM[i]).TBCTL.bit.SYNCOSEL = TB_SYNC_IN;
+		(*ePWM[i]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+		(*ePWM[i]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+		(*ePWM[i]).CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+		(*ePWM[i]).CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	
+		(*ePWM[i]).AQCTLA.bit.ZRO = AQ_SET;
+		(*ePWM[i]).AQCTLA.bit.CAU = AQ_CLEAR;
+		j++;
+	}
+
+	// Configure 1st module as Master
+	(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;	 // No up-stream sync
+	(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; // sync "down-stream" 
+	(*ePWM[n]).TBPHS.half.TBPHS = 0;			 // Reference phase = 0
+}
+
+
+PWM_PFC2PHILDrv/1149261215  254   0     0       4381      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_PFC2PHILDrvCnf.c
+//
+//	Description:	Contains the driver init code for the PFC 2 phase interleaved
+//					PWM drive.
+//
+//	Version: 		2.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  05/26/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+//  06/02/06  | Release 2.0  		Changed reload condition to CNTR=PRD
+//----------------------------------------------------------------------------------
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+// EPWM(n) init.  EPWM(n) is master
+//=============================================
+void Pfc2philDrvCnf(int16 n, int16 period)
+{
+// EPWM(n) init.  Note EPWM(n) is the Master
+	(*ePWM[n]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n]).TBPRD = (period-1);
+	(*ePWM[n]).TBPHS.half.TBPHS = 0;
+	(*ePWM[n]).TBCTR = 0;
+
+	(*ePWM[n]).TBCTL.bit.CTRMODE = TB_COUNT_UP;
+	(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;
+	(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; //sync EPWM(n+1) "down-stream"
+	(*ePWM[n]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n]).CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+	(*ePWM[n]).CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+	(*ePWM[n]).CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	(*ePWM[n]).CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+
+// Use for Active High polarity
+//	(*ePWM[n]).AQCTLA.bit.ZRO = AQ_SET;
+//	(*ePWM[n]).AQCTLA.bit.CAU = AQ_CLEAR;
+
+// Use for Active Low polarity
+	(*ePWM[n]).AQCTLA.bit.ZRO = AQ_CLEAR;
+	(*ePWM[n]).AQCTLA.bit.CAU = AQ_SET;
+
+// Configure the TripZones for Phase 1
+	EALLOW;		
+	(*ePWM[n]).TZSEL.all = 0x0; 				// disable all initially
+	(*ePWM[n]).TZSEL.bit.OSHT3 = TZ_ENABLE;		// OneShot on TZ3
+	//(*ePWM[n]).TZSEL.bit.OSHT4 = TZ_ENABLE;	// for test only
+
+	(*ePWM[n]).TZCTL.bit.TZA = TZ_FORCE_HI;	// Hi = shutdown
+	//(*ePWM[n]).TZCTL.bit.TZB = TZ_FORCE_HI;
+	EDIS;
+
+// EPWM(n+1) init.  EPWM(n+1) is a slave
+//=============================================
+	(*ePWM[n+1]).TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	(*ePWM[n+1]).TBPRD = (period-1);
+	(*ePWM[n+1]).TBPHS.half.TBPHS = (period-1)/2;	// fix phase at 180 deg
+	(*ePWM[n+1]).TBCTR = 0;
+
+	(*ePWM[n+1]).TBCTL.bit.CTRMODE = TB_COUNT_UP;
+	(*ePWM[n+1]).TBCTL.bit.PHSEN = TB_ENABLE;
+	(*ePWM[n+1]).TBCTL.bit.SYNCOSEL = TB_SYNC_IN; // Sync "flow through" mode
+	(*ePWM[n+1]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n+1]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n+1]).CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+	(*ePWM[n+1]).CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+	(*ePWM[n+1]).CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	(*ePWM[n+1]).CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+
+// Use for Active High polarity
+//	(*ePWM[n+1]).AQCTLA.bit.ZRO = AQ_SET;
+//	(*ePWM[n+1]).AQCTLA.bit.CAU = AQ_CLEAR;
+
+// Use for Active Low polarity
+	(*ePWM[n+1]).AQCTLA.bit.ZRO = AQ_CLEAR;
+	(*ePWM[n+1]).AQCTLA.bit.CAU = AQ_SET;
+
+// Configure the TripZones for Phase 2
+	EALLOW;		
+	(*ePWM[n+1]).TZSEL.all = 0x0; 				// disable all initially
+	(*ePWM[n+1]).TZSEL.bit.OSHT3 = TZ_ENABLE;	// OneShot on TZ3
+	//(*ePWM[n+1]).TZSEL.bit.OSHT4 = TZ_ENABLE;	// for test only
+
+	(*ePWM[n+1]).TZCTL.bit.TZA = TZ_FORCE_HI;	// Hi = shutdown
+	//(*ePWM[n+1]).TZCTL.bit.TZB = TZ_FORCE_HI;
+	EDIS;
+}
+
+// Here For convenience, found in DSP280x_EPWM_Defines.h
+// TZSEL (Trip Zone Select)
+//==========================
+// CBCn and OSHTn bits
+//#define	TZ_DISABLE		0x0
+//#define	TZ_ENABLE		0x1
+//
+// TZCTL (Trip Zone Control)
+//==========================
+// TZA and TZB bits
+//#define	TZ_HIZ			0x0
+//#define	TZ_FORCE_HI		0x1
+//#define	TZ_FORCE_LO		0x2
+//#define	TZ_NO_CHANGE	0x3
+
+
+
+
+
+
+
+PWM_PFC2PHILDrv/1149260348  276   0     0       3280      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_PFC2PHILDrvCnf.c
+//
+//	Description:	Contains the driver init code for the PFC 2
+//					phase interleaved PWM drive based on 1 EPWM module
+//	Version: 		1.1
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2006
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  05/26/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+//  03/09/06  | Version 1.1			Modified to run with 1 EPWM unit
+//----------------------------------------------------------------------------------
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+// EPWM(n) init.  EPWM(n) is master
+//=============================================
+void PFC2PHIL_OneEwmCh(int16 nChannel, int16 nPeriod)
+{
+
+// EPWM(n) init.  Note EPWM(n) is the Master
+	ePWM[nChannel]->TBCTL.bit.PRDLD = TB_IMMEDIATE;	// set Immediate load
+	ePWM[nChannel]->TBPRD = ((nPeriod>>2)-1);
+	ePWM[nChannel]->TBPHS.half.TBPHS = 0;
+	ePWM[nChannel]->TBCTR = 0;
+
+	ePWM[nChannel]->TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
+	ePWM[nChannel]->TBCTL.bit.PHSEN = TB_DISABLE;
+	ePWM[nChannel]->TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; //sync EPWM(n+1) "down-stream"
+	ePWM[nChannel]->TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	ePWM[nChannel]->TBCTL.bit.CLKDIV = TB_DIV1;
+
+	ePWM[nChannel]->CMPCTL.bit.LOADAMODE = CC_CTR_ZERO;
+	ePWM[nChannel]->CMPCTL.bit.LOADBMODE = CC_CTR_ZERO;
+	ePWM[nChannel]->CMPCTL.bit.SHDWAMODE = CC_SHADOW;
+	ePWM[nChannel]->CMPCTL.bit.SHDWBMODE = CC_SHADOW;
+
+
+// Use for Active High polarity
+//	ePWM[nChannel]->AQCTLA.bit.ZRO = AQ_SET;
+//	ePWM[nChannel]->AQCTLA.bit.CAU = AQ_CLEAR;
+//	ePWM[nChannel]->AQCTLB.bit.ZRO = AQ_CLEAR;
+//	ePWM[nChannel]->AQCTLB.bit.CBU = AQ_SET;
+
+// Use for Active Low polarity
+	ePWM[nChannel]->AQCTLA.bit.CAU = AQ_CLEAR;
+	ePWM[nChannel]->AQCTLA.bit.CAD = AQ_SET;
+
+	ePWM[nChannel]->AQCTLB.bit.CBD = AQ_CLEAR;
+	ePWM[nChannel]->AQCTLB.bit.CBU = AQ_SET;
+
+// Configure the TripZones for Phase 1
+	EALLOW;		
+	ePWM[nChannel]->TZSEL.all = 0x0; 				// disable all initially
+	ePWM[nChannel]->TZSEL.bit.OSHT3 = TZ_ENABLE;	// OneShot on TZ3
+
+	ePWM[nChannel]->TZCTL.bit.TZA = TZ_FORCE_HI;	// High = shutdown
+	ePWM[nChannel]->TZCTL.bit.TZB = TZ_FORCE_HI;	// High = shutdown
+
+	EDIS;
+
+}
+
+// Here For convenience, found in DSP280x_EPWM_Defines.h
+// TZSEL (Trip Zone Select)
+//==========================
+// CBCn and OSHTn bits
+//#define	TZ_DISABLE		0x0
+//#define	TZ_ENABLE		0x1
+//
+// TZCTL (Trip Zone Control)
+//==========================
+// TZA and TZB bits
+//#define	TZ_HIZ			0x0
+//#define	TZ_FORCE_HI		0x1
+//#define	TZ_FORCE_LO		0x2
+//#define	TZ_NO_CHANGE	0x3
+
+
+
+
+
+
+PWM_PSFBDrvCnf./1149260348  299   0     0       4202      `
+//----------------------------------------------------------------------------------
+//	FILE:			PWM_PSFBDrvCnf.c
+//
+//	Description:	EPWM Interface driver config to support a Phase Shifted Full bridge
+//					topology. This function allows init of period i.e. PWM frequency, and
+//					defines the target EPWM module/s.
+//
+//	Version: 		1.00
+//
+//  Target:  		TMS320F280x 
+//
+//	Type: 			Device dependent
+//
+//----------------------------------------------------------------------------------
+//  Copyright Texas Instruments © 2004-2005                                				
+//----------------------------------------------------------------------------------
+//  Revision History:
+//----------------------------------------------------------------------------------
+//  Date	  | Description
+//----------------------------------------------------------------------------------
+//  06/30/05  | Release 1.0  		New release.
+//----------------------------------------------------------------------------------
+
+#include "DSP280x_Device.h"     	// DSP280x Headerfile Include File
+#include "DSP280x_EPWM_defines.h"	// useful defines for initialization
+
+extern volatile struct EPWM_REGS *ePWM[];
+
+//============================================================================
+//	PSFBDrvCnf(n, period)  configuration function for PSFB_DRV driver
+//============================================================================
+//
+//						SyncIn
+//						   |
+//				___________|___________
+//				|	   PSFB_DRV		  |
+//				|~~~~~~~~~~~~~~~~~~~~~|
+//		 	 -->| 			   EPWMnA |--> (Left leg upper switch)
+//		 	 -->| 		  	   EPWMnB |--> (Left leg Lower switch)
+//		 	 -->| 		   EPWM(n+1)A |--> (Right leg upper switch)
+//		 	 -->| 		   EPWM(n+1)B |--> (Right leg Lower switch)
+//				|_____________________|
+//						   |
+//						   |
+//						SyncOut
+//
+// Description:
+// ------------
+// PWM peripheral Driver Configuration for PSFB w/ZVS modulation
+// Config can be targetted to any consecutive pairs of ePWM modules
+// The function call is:
+// 
+// PSFBDrvCnf(int16 n, int16 period)
+//
+// Where: 
+// n: 1st ePWM target module (i.e. Master)
+// Period: defines the PWM period or frequency. See Module doc.
+// e.g. if n=2, Then EPWM2 and EPWM3 become the left and right legs
+//
+//---------------------------------------------------------------------------
+void PSFBDrvCnf(int16 n, int16 period)
+{
+// n = the ePWM module number, i.e. selects the target module for init.
+// ePWM(n) init.  Note EPWM(n) is the Master
+	(*ePWM[n]).TBCTL.bit.PRDLD = TB_SHADOW;	// set Immediate load
+	(*ePWM[n]).TBPRD = period;
+	(*ePWM[n]).CMPA.half.CMPA = period/2;		// Fix duty at 50%
+	(*ePWM[n]).TBPHS.half.TBPHS = 0;
+	(*ePWM[n]).TBCTR = 0;
+
+	(*ePWM[n]).TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
+	(*ePWM[n]).TBCTL.bit.PHSEN = TB_DISABLE;
+	(*ePWM[n]).TBCTL.bit.PRDLD=TB_SHADOW;			//Ê¹ÓÃÓ°×Ó¼Ä´æÆ÷×°ÔØ£¨È±Ê¡Öµ£¬¿ÉÒÔ²»Éè¶¨£©
+	(*ePWM[n]).TBCTL.bit.SYNCOSEL = TB_CTR_ZERO; //used to sync EPWM(n+1) "down-stream"
+	(*ePWM[n]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n]).TBCTL.bit.CLKDIV = TB_DIV1;
+	
+	(*ePWM[n]).CMPCTL.bit.SHDWAMODE=CC_SHADOW;		//²ÉÓÃÓ°×Ó¼Ä´æÆ÷	
+	(*ePWM[n]).CMPCTL.bit.SHDWBMODE=CC_SHADOW;		//
+	(*ePWM[n]).CMPCTL.bit.LOADAMODE=CC_CTR_ZERO;		//ÔÚCTR=0Ê±×°ÔØ
+	(*ePWM[n]).CMPCTL.bit.LOADBMODE=CC_CTR_ZERO;
+	(*ePWM[n]).AQCTLA.bit.CAU = AQ_CLEAR;
+	(*ePWM[n]).AQCTLA.bit.CAD = AQ_SET;
+	
+	(*ePWM[n]).DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+	(*ePWM[n]).DBCTL.bit.POLSEL = DB_ACTV_HIC;	// Active Hi Complimentary
+	(*ePWM[n]).DBRED = 250;	// dummy value for now
+	(*ePWM[n]).DBFED = 250;	// dummy value for now
+
+// ePWM(n+1) init.  EPWM(n+1) is a slave
+	(*ePWM[n+1]).TBCTL.bit.PRDLD = TB_SHADOW;	// set Immediate load
+	(*ePWM[n+1]).TBPRD = period;
+	(*ePWM[n+1]).CMPA.half.CMPA = period/2;	// Fix duty at 50%
+	(*ePWM[n+1]).TBPHS.half.TBPHS = 0; 		// zero phase initially
+	(*ePWM[n+1]).TBCTR = 0;
+
+	(*ePWM[n+1]).TBCTL.bit.CTRMODE = TB_COUNT_UPDOWN;
+	(*ePWM[n+1]).TBCTL.bit.PHSEN = TB_DISABLE;
+	(*ePWM[n+1]).TBCTL.bit.PRDLD=TB_SHADOW;			//Ê¹ÓÃÓ°×Ó¼Ä´æÆ÷×°ÔØ£¨È±Ê¡Öµ£¬¿ÉÒÔ²»Éè¶¨£©
+	(*ePWM[n+1]).TBCTL.bit.SYNCOSEL = TB_SYNC_IN; // Sync "flow through" mode
+	(*ePWM[n+1]).TBCTL.bit.HSPCLKDIV = TB_DIV1;
+	(*ePWM[n+1]).TBCTL.bit.CLKDIV = TB_DIV1;
+
+	(*ePWM[n+1]).CMPCTL.bit.SHDWAMODE=CC_SHADOW;		//²ÉÓÃÓ°×Ó¼Ä´æÆ÷	
+	(*ePWM[n+1]).CMPCTL.bit.SHDWBMODE=CC_SHADOW;		//
+	(*ePWM[n+1]).CMPCTL.bit.LOADAMODE=CC_CTR_ZERO;		//ÔÚCTR=0Ê±×°ÔØ
+	(*ePWM[n+1]).CMPCTL.bit.LOADBMODE=CC_CTR_ZERO;
+	(*ePWM[n+1]).AQCTLA.bit.CAU = AQ_CLEAR;
+	(*ePWM[n+1]).AQCTLA.bit.CAD = AQ_SET;
+
+	(*ePWM[n+1]).DBCTL.bit.OUT_MODE = DB_FULL_ENABLE;
+	(*ePWM[n+1]).DBCTL.bit.POLSEL = DB_ACTV_HIC;	// Active Hi Complimentary
+	(*ePWM[n+1]).DBRED = 250;	// dummy value for now
+	(*ePWM[n+1]).DBFED = 250;	// dummy value for now
+
+}
+Sintb360.asm/   1149260347  0     0     0       20426     `
+;----------------------------------------------------------------------------------
+;	FILE:			Sintb360.ASM
+;
+;	Description:	This file contains 256 entries of SIN values for Table Look-up
+;					used in the Signal Generator modules
+;
+;	Version: 		1.00
+;
+;   Target:  		TMS320F280x 
+;
+;	Type: 			Device dependent
+;
+;----------------------------------------------------------------------------------
+;  Copyright Texas Instruments © 2004-2005                                			
+;----------------------------------------------------------------------------------
+;  Revision History:
+;----------------------------------------------------------------------------------
+;  Date	  | Description
+;----------------------------------------------------------------------------------
+;  06/30/05  | Release 1.0  		New release.
+;----------------------------------------------------------------------------------
+
+;Module definitions for external reference.
+        	.def        SINTAB_360
+;===========================================================================
+;-------------------------------------------------------
+; Sine look-up table
+; No. Entries   : 256
+; Angle Range   : 360 deg
+; Number format : Q15 with range -1 < N < +1
+;-------------------------------------------------------
+            .sect "SINTBL"
+
+                  		;SINVAL      ;        Index     Angle   Sin(Angle)
+SINTAB_360  .word          0         ;      	0         	0 	  0.0000
+            .word        804         ;          1        1.41     0.0245
+            .word       1608         ;          2        2.81     0.0491
+            .word       2410         ;          3        4.22     0.0736
+            .word       3212         ;          4        5.63     0.0980
+            .word       4011         ;          5        7.03     0.1224
+            .word       4808         ;          6        8.44     0.1467
+            .word       5602         ;          7        9.84     0.1710
+            .word       6393         ;          8       11.25     0.1951
+            .word       7179         ;          9       12.66     0.2191
+            .word       7962         ;         10       14.06     0.2430
+            .word       8739         ;         11       15.47     0.2667
+            .word       9512         ;         12       16.88     0.2903
+            .word       10278        ;         13       18.28     0.3137
+            .word       11039        ;         14       19.69     0.3369
+            .word       11793        ;         15       21.09     0.3599
+            .word       12539        ;         16       22.50     0.3827
+            .word       13279        ;         17       23.91     0.4052
+            .word       14010        ;         18       25.31     0.4276
+            .word       14732        ;         19       26.72     0.4496
+            .word       15446        ;         20       28.13     0.4714
+            .word       16151        ;         21       29.53     0.4929
+            .word       16846        ;         22       30.94     0.5141
+            .word       17530        ;         23       32.34     0.5350
+            .word       18204        ;         24       33.75     0.5556
+            .word       18868        ;         25       35.16     0.5758
+            .word       19519        ;         26       36.56     0.5957
+            .word       20159        ;         27       37.97     0.6152
+            .word       20787        ;         28       39.38     0.6344
+            .word       21403        ;         29       40.78     0.6532
+            .word       22005        ;         30       42.19     0.6716
+            .word       22594        ;         31       43.59     0.6895
+            .word       23170        ;         32       45.00     0.7071
+            .word       23731        ;         33       46.41     0.7242
+            .word       24279        ;         34       47.81     0.7410
+            .word       24811        ;         35       49.22     0.7572
+            .word       25329        ;         36       50.63     0.7730
+            .word       25832        ;         37       52.03     0.7883
+            .word       26319        ;         38       53.44     0.8032
+            .word       26790        ;         39       54.84     0.8176
+            .word       27245        ;         40       56.25     0.8315
+            .word       27683        ;         41       57.66     0.8449
+            .word       28105        ;         42       59.06     0.8577
+            .word       28510        ;         43       60.47     0.8701
+            .word       28898        ;         44       61.88     0.8819
+            .word       29268        ;         45       63.28     0.8932
+            .word       29621        ;         46       64.69     0.9040
+            .word       29956        ;         47       66.09     0.9142
+            .word       30273        ;         48       67.50     0.9239
+            .word       30571        ;         49       68.91     0.9330
+            .word       30852        ;         50       70.31     0.9415
+            .word       31113        ;         51       71.72     0.9495
+            .word       31356        ;         52       73.13     0.9569
+            .word       31580        ;         53       74.53     0.9638
+            .word       31785        ;         54       75.94     0.9700
+            .word       31971        ;         55       77.34     0.9757
+            .word       32137        ;         56       78.75     0.9808
+            .word       32285        ;         57       80.16     0.9853
+            .word       32412        ;         58       81.56     0.9892
+            .word       32521        ;         59       82.97     0.9925
+            .word       32609        ;         60       84.38     0.9952
+            .word       32678        ;         61       85.78     0.9973
+            .word       32728        ;         62       87.19     0.9988
+            .word       32757        ;         63       88.59     0.9997
+            .word       32767        ;         64       90.00     1.0000
+            .word       32757        ;         65       91.41     0.9997
+            .word       32728        ;         66       92.81     0.9988
+            .word       32678        ;         67       94.22     0.9973
+            .word       32609        ;         68       95.63     0.9952
+            .word       32521        ;         69       97.03     0.9925
+            .word       32412        ;         70       98.44     0.9892
+            .word       32285        ;         71       99.84     0.9853
+            .word       32137        ;         72       101.25    0.9808
+            .word       31971        ;         73       102.66    0.9757
+            .word       31785        ;         74       104.06    0.9700
+            .word       31580        ;         75       105.47    0.9638
+            .word       31356        ;         76       106.88    0.9569
+            .word       31113        ;         77       108.28    0.9495
+            .word       30852        ;         78       109.69    0.9415
+            .word       30571        ;         79       111.09    0.9330
+            .word       30273        ;         80       112.50    0.9239
+            .word       29956        ;         81       113.91    0.9142
+            .word       29621        ;         82       115.31    0.9040
+            .word       29268        ;         83       116.72    0.8932
+            .word       28898        ;         84       118.13    0.8819
+            .word       28510        ;         85       119.53    0.8701
+            .word       28105        ;         86       120.94    0.8577
+            .word       27683        ;         87       122.34    0.8449
+            .word       27245        ;         88       123.75    0.8315
+            .word       26790        ;         89       125.16    0.8176
+            .word       26319        ;         90       126.56    0.8032
+            .word       25832        ;         91       127.97    0.7883
+            .word       25329        ;         92       129.38    0.7730
+            .word       24811        ;         93       130.78    0.7572
+            .word       24279        ;         94       132.19    0.7410
+            .word       23731        ;         95       133.59    0.7242
+            .word       23170        ;         96       135.00    0.7071
+            .word       22594        ;         97       136.41    0.6895
+            .word       22005        ;         98       137.81    0.6716
+            .word       21403        ;         99       139.22    0.6532
+            .word       20787        ;         100      140.63    0.6344
+            .word       20159        ;         101      142.03    0.6152
+            .word       19519        ;         102      143.44    0.5957
+            .word       18868        ;         103      144.84    0.5758
+            .word       18204        ;         104      146.25    0.5556
+            .word       17530        ;         105      147.66    0.5350
+            .word       16846        ;         106      149.06    0.5141
+            .word       16151        ;         107      150.47    0.4929
+            .word       15446        ;         108      151.88    0.4714
+            .word       14732        ;         109      153.28    0.4496
+            .word       14010        ;         110      154.69    0.4276
+            .word       13279        ;         111      156.09    0.4052
+            .word       12539        ;         112      157.50    0.3827
+            .word       11793        ;         113      158.91    0.3599
+            .word       11039        ;         114      160.31    0.3369
+            .word       10278        ;         115      161.72    0.3137
+            .word       9512         ;         116      163.13    0.2903
+            .word       8739         ;         117      164.53    0.2667
+            .word       7962         ;         118      165.94    0.2430
+            .word       7179         ;         119      167.34    0.2191
+            .word       6393         ;         120      168.75    0.1951
+            .word       5602         ;         121      170.16    0.1710
+            .word       4808         ;         122      171.56    0.1467
+            .word       4011         ;         123      172.97    0.1224
+            .word       3212         ;         124      174.38    0.0980
+            .word       2410         ;         125      175.78    0.0736
+            .word       1608         ;         126      177.19    0.0491
+            .word        804         ;         127      178.59    0.0245
+            .word         0          ;         128      180.00    0.0000
+            .word       64731        ;         129      181.41   -0.0245
+            .word       63927        ;         130      182.81   -0.0491
+            .word       63125        ;         131      184.22   -0.0736
+            .word       62323        ;         132      185.63   -0.0980
+            .word       61524        ;         133      187.03   -0.1224
+            .word       60727        ;         134      188.44   -0.1467
+            .word       59933        ;         135      189.84   -0.1710
+            .word       59142        ;         136      191.25   -0.1951
+            .word       58356        ;         137      192.66   -0.2191
+            .word       57573        ;         138      194.06   -0.2430
+            .word       56796        ;         139      195.47   -0.2667
+            .word       56023        ;         140      196.88   -0.2903
+            .word       55257        ;         141      198.28   -0.3137
+            .word       54496        ;         142      199.69   -0.3369
+            .word       53742        ;         143      201.09   -0.3599
+            .word       52996        ;         144      202.50   -0.3827
+            .word       52256        ;         145      203.91   -0.4052
+            .word       51525        ;         146      205.31   -0.4276
+            .word       50803        ;         147      206.72   -0.4496
+            .word       50089        ;         148      208.13   -0.4714
+            .word       49384        ;         149      209.53   -0.4929
+            .word       48689        ;         150      210.94   -0.5141
+            .word       48005        ;         151      212.34   -0.5350
+            .word       47331        ;         152      213.75   -0.5556
+            .word       46667        ;         153      215.16   -0.5758
+            .word       46016        ;         154      216.56   -0.5957
+            .word       45376        ;         155      217.97   -0.6152
+            .word       44748        ;         156      219.38   -0.6344
+            .word       44132        ;         157      220.78   -0.6532
+            .word       43530        ;         158      222.19   -0.6716
+            .word       42941        ;         159      223.59   -0.6895
+            .word       42365        ;         160      225.00   -0.7071
+            .word       41804        ;         161      226.41   -0.7242
+            .word       41256        ;         162      227.81   -0.7410
+            .word       40724        ;         163      229.22   -0.7572
+            .word       40206        ;         164      230.63   -0.7730
+            .word       39703        ;         165      232.03   -0.7883
+            .word       39216        ;         166      233.44   -0.8032
+            .word       38745        ;         167      234.84   -0.8176
+            .word       38290        ;         168      236.25   -0.8315
+            .word       37852        ;         169      237.66   -0.8449
+            .word       37430        ;         170      239.06   -0.8577
+            .word       37025        ;         171      240.47   -0.8701
+            .word       36637        ;         172      241.88   -0.8819
+            .word       36267        ;         173      243.28   -0.8932
+            .word       35914        ;         174      244.69   -0.9040
+            .word       35579        ;         175      246.09   -0.9142
+            .word       35262        ;         176      247.50   -0.9239
+            .word       34964        ;         177      248.91   -0.9330
+            .word       34683        ;         178      250.31   -0.9415
+            .word       34422        ;         179      251.72   -0.9495
+            .word       34179        ;         180      253.13   -0.9569
+            .word       33955        ;         181      254.53   -0.9638
+            .word       33750        ;         182      255.94   -0.9700
+            .word       33564        ;         183      257.34   -0.9757
+            .word       33398        ;         184      258.75   -0.9808
+            .word       33250        ;         185      260.16   -0.9853
+            .word       33123        ;         186      261.56   -0.9892
+            .word       33014        ;         187      262.97   -0.9925
+            .word       32926        ;         188      264.38   -0.9952
+            .word       32857        ;         189      265.78   -0.9973
+            .word       32807        ;         190      267.19   -0.9988
+            .word       32778        ;         191      268.59   -0.9997
+            .word       32768        ;         192      270.00   -1.0000
+            .word       32778        ;         193      271.41   -0.9997
+            .word       32807        ;         194      272.81   -0.9988
+            .word       32857        ;         195      274.22   -0.9973
+            .word       32926        ;         196      275.63   -0.9952
+            .word       33014        ;         197      277.03   -0.9925
+            .word       33123        ;         198      278.44   -0.9892
+            .word       33250        ;         199      279.84   -0.9853
+            .word       33398        ;         200      281.25   -0.9808
+            .word       33564        ;         201      282.66   -0.9757
+            .word       33750        ;         202      284.06   -0.9700
+            .word       33955        ;         203      285.47   -0.9638
+            .word       34179        ;         204      286.88   -0.9569
+            .word       34422        ;         205      288.28   -0.9495
+            .word       34683        ;         206      289.69   -0.9415
+            .word       34964        ;         207      291.09   -0.9330
+            .word       35262        ;         208      292.50   -0.9239
+            .word       35579        ;         209      293.91   -0.9142
+            .word       35914        ;         210      295.31   -0.9040
+            .word       36267        ;         211      296.72   -0.8932
+            .word       36637        ;         212      298.13   -0.8819
+            .word       37025        ;         213      299.53   -0.8701
+            .word       37430        ;         214      300.94   -0.8577
+            .word       37852        ;         215      302.34   -0.8449
+            .word       38290        ;         216      303.75   -0.8315
+            .word       38745        ;         217      305.16   -0.8176
+            .word       39216        ;         218      306.56   -0.8032
+            .word       39703        ;         219      307.97   -0.7883
+            .word       40206        ;         220      309.38   -0.7730
+            .word       40724        ;         221      310.78   -0.7572
+            .word       41256        ;         222      312.19   -0.7410
+            .word       41804        ;         223      313.59   -0.7242
+            .word       42365        ;         224      315.00   -0.7071
+            .word       42941        ;         225      316.41   -0.6895
+            .word       43530        ;         226      317.81   -0.6716
+            .word       44132        ;         227      319.22   -0.6532
+            .word       44748        ;         228      320.63   -0.6344
+            .word       45376        ;         229      322.03   -0.6152
+            .word       46016        ;         230      323.44   -0.5957
+            .word       46667        ;         231      324.84   -0.5758
+            .word       47331        ;         232      326.25   -0.5556
+            .word       48005        ;         233      327.66   -0.5350
+            .word       48689        ;         234      329.06   -0.5141
+            .word       49384        ;         235      330.47   -0.4929
+            .word       50089        ;         236      331.88   -0.4714
+            .word       50803        ;         237      333.28   -0.4496
+            .word       51525        ;         238      334.69   -0.4276
+            .word       52256        ;         239      336.09   -0.4052
+            .word       52996        ;         240      337.50   -0.3827
+            .word       53742        ;         241      338.91   -0.3599
+            .word       54496        ;         242      340.31   -0.3369
+            .word       55257        ;         243      341.72   -0.3137
+            .word       56023        ;         244      343.13   -0.2903
+            .word       56796        ;         245      344.53   -0.2667
+            .word       57573        ;         246      345.94   -0.2430
+            .word       58356        ;         247      347.34   -0.2191
+            .word       59142        ;         248      348.75   -0.1951
+            .word       59933        ;         249      350.16   -0.1710
+            .word       60727        ;         250      351.56   -0.1467
+            .word       61524        ;         251      352.97   -0.1224
+            .word       62323        ;         252      354.38   -0.0980
+            .word       63125        ;         253      355.78   -0.0736
+            .word       63927        ;         254      357.19   -0.0491
+            .word       64731        ;         255      358.59   -0.0245
+            .word       65535        ;         256      360.00    0.0000

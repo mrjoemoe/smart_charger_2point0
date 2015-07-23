@@ -1,0 +1,25 @@
+Output: Gerber Files
+Type  : Gerber
+From  : Variant [[No Variations]] of Project [smart_charger.PrjPcb]
+   Generated File[smart_charger_pcb.GTL]
+   Generated File[smart_charger_pcb.GP1]
+   Generated File[smart_charger_pcb.GP2]
+   Generated File[smart_charger_pcb.GBL]
+   Generated File[smart_charger_pcb.GPB]
+   Generated File[smart_charger_pcb.GPT]
+   Generated File[smart_charger_pcb.GTO]
+   Generated File[smart_charger_pcb.GTS]
+   Generated File[smart_charger_pcb.GBS]
+   Generated File[smart_charger_pcb.GBO]
+   Generated File[smart_charger_pcb.GKO]
+   Generated File[smart_charger_pcb.GD1]
+   Generated File[smart_charger_pcb.GG1]
+   Generated File[smart_charger_pcb.RUL]
+   Generated File[smart_charger_pcb.EXTREP]
+   Generated File[smart_charger_pcb.REP]
+
+
+Files Generated   : 16
+Documents Printed : 0
+
+Finished Output Generation At 5:25:39 PM On 5/7/2014

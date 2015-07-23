@@ -1,0 +1,14 @@
+Removed Pin From Net: NetName=Net04_5 Pin=O4-1
+Removed Pin From Net: NetName=NetO4_2 Pin=O4-2
+Removed Pin From Net: NetName=NetC5_1 Pin=O4-3
+Removed Pin From Net: NetName=GND1 Pin=O4-4
+Removed Pin From Net: NetName=5V1 Pin=O4-8
+Removed Member From Class: ClassName=sensing_circuits Member=O4
+Change Component Comment : Designator=04 Old Comment=AD8032A_iac New Comment=AD8032A
+Change Component Designator: OldDesignator=04 NewDesignator=O4
+Added Pin To Net: NetName=Net04_5 Pin=O4-1
+Added Pin To Net: NetName=NetO4_2 Pin=O4-2
+Added Pin To Net: NetName=NetC5_1 Pin=O4-3
+Change Net Name : Old Net Name=Net04_5 New Net Name=NetO4_1
+Change Net Name : Old Net Name=Net04_6 New Net Name=NetO4_6
+Added Member To Class: ClassName=sensing_circuits Member=Component O2 AD8032A

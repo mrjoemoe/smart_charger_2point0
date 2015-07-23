@@ -1,0 +1,12 @@
+Added Pin To Net: NetName=IGBT1 Pin=GATE1-1
+Added Pin To Net: NetName=IGBT2 Pin=GATE2-1
+Added Pin To Net: NetName=IGBT3 Pin=GATE3-1
+Added Pin To Net: NetName=IGBT4 Pin=GATE4-1
+Added Pin To Net: NetName=IGBT5 Pin=GATE5-1
+Added Pin To Net: NetName=IGBT6 Pin=GATE6-1
+Change Net Name : Old Net Name=IGBT1 New Net Name=EM1
+Change Net Name : Old Net Name=IGBT2 New Net Name=EM2
+Change Net Name : Old Net Name=IGBT3 New Net Name=EM3
+Change Net Name : Old Net Name=IGBT4 New Net Name=EM4
+Change Net Name : Old Net Name=IGBT5 New Net Name=EM5
+Change Net Name : Old Net Name=IGBT6 New Net Name=EM6

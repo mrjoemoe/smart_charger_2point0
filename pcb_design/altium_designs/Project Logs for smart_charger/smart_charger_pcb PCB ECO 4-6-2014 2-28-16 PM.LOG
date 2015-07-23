@@ -1,0 +1,25 @@
+Added Component: Designator=5VOUT(5MM_HOR_ENTRY)
+Added Component: Designator=CC1P(CAP_CERAM_5MM)
+Added Component: Designator=CC2P(CAP_CERAM_5MM)
+Added Component: Designator=CC3P(CAP_CERAM_5MM)
+Added Component: Designator=CC4P(CAP_CERAM_5MM)
+Added Component: Designator=CC5P(CAP_CERAM_5MM)
+Added Pin To Net: NetName=5V1 Pin=5VOUT-1
+Added Pin To Net: NetName=GND1 Pin=5VOUT-2
+Added Pin To Net: NetName=GND2 Pin=CC1P-2
+Added Pin To Net: NetName=5V2 Pin=CC2P-1
+Added Pin To Net: NetName=5V1 Pin=CC3P-1
+Added Pin To Net: NetName=GND1 Pin=CC3P-2
+Added Pin To Net: NetName=GND1 Pin=CC4P-2
+Added Pin To Net: NetName=+15V Pin=CC5P-1
+Added Pin To Net: NetName=GND1 Pin=CC5P-2
+Added Member To Class: ClassName=power_supplies Member=Component 5VOUT 5MM_HOR_ENTRY
+Added Member To Class: ClassName=power_supplies Member=Component CC1P CAP_CERAM_5MM
+Added Member To Class: ClassName=power_supplies Member=Component CC2P CAP_CERAM_5MM
+Added Member To Class: ClassName=power_supplies Member=Component CC3P CAP_CERAM_5MM
+Added Member To Class: ClassName=power_supplies Member=Component CC4P CAP_CERAM_5MM
+Added Member To Class: ClassName=power_supplies Member=Component CC5P CAP_CERAM_5MM
+Added Room: Name=fo_tx_array
+Added Room: Name=gate_driver_array
+Added Room: Name=power_supplies
+Added Room: Name=sensing_circuits

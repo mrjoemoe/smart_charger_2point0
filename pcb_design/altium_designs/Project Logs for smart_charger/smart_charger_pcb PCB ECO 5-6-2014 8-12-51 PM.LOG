@@ -1,0 +1,4 @@
+Added Component: Designator=C20S(CAPR5-4X5)
+Added Pin To Net: NetName=NetC5S_1 Pin=C20S-1
+Added Pin To Net: NetName=GND1 Pin=C20S-2
+Added Member To Class: ClassName=sensing_circuits Member=Component C20S C5

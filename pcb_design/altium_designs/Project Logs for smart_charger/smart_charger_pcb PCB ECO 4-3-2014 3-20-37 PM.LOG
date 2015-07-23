@@ -1,0 +1,122 @@
+Added Component: Designator=C1(Cap_Pol_5mm)
+Added Component: Designator=C2(Cap_Pol_5mm)
+Added Component: Designator=C3(Cap_Pol_5mm)
+Added Component: Designator=C4(Cap_Pol_5mm)
+Added Component: Designator=C5(Cap_Pol_5mm)
+Added Component: Designator=FUSE1(Fuse < 5A)
+Added Component: Designator=FUSE2(Fuse < 5A)
+Added Component: Designator=FUSE3(Fuse < 5A)
+Added Component: Designator=LED1(LED)
+Added Component: Designator=LED2(LED)
+Added Component: Designator=LED3(LED)
+Added Component: Designator=LED4(LED)
+Added Component: Designator=LED5(LED)
+Added Component: Designator=PS1(AC/DC CONVERTER 5V +/-15V 30W)
+Added Component: Designator=PS2(CONV AC/DC 1W 5V)
+Added Component: Designator=PS3(PWR SPLY MEDICAL 15V 2.67A 40W)
+Added Component: Designator=R1(AXIAL-0.3)
+Added Component: Designator=R2(AXIAL-0.3)
+Added Component: Designator=R3(AXIAL-0.3)
+Added Component: Designator=R4(AXIAL-0.3)
+Added Component: Designator=R5(AXIAL-0.3)
+Added Component: Designator=vac_in(5MM_HOR_ENTRY)
+Added Pin To Net: NetName=+15V Pin=C3-1
+Added Pin To Net: NetName=+15V Pin=LED3-1
+Added Pin To Net: NetName=+15V Pin=PS1-5
+Added Net: Name=+15V
+Added Pin To Net: NetName=-15V Pin=C2-2
+Added Pin To Net: NetName=-15V Pin=PS1-3
+Added Pin To Net: NetName=-15V Pin=R2-1
+Added Net: Name=-15V
+Added Pin To Net: NetName=5V1 Pin=C1-1
+Added Pin To Net: NetName=5V1 Pin=LED1-1
+Added Pin To Net: NetName=5V1 Pin=PS1-2
+Added Net: Name=5V1
+Added Pin To Net: NetName=5V2 Pin=C4-1
+Added Pin To Net: NetName=5V2 Pin=LED4-1
+Added Pin To Net: NetName=5V2 Pin=PS2-4
+Added Net: Name=5V2
+Added Pin To Net: NetName=15V2 Pin=C5-1
+Added Pin To Net: NetName=15V2 Pin=LED5-1
+Added Pin To Net: NetName=15V2 Pin=PS3-3
+Added Net: Name=15V2
+Added Pin To Net: NetName=GND1 Pin=C1-2
+Added Pin To Net: NetName=GND1 Pin=C2-1
+Added Pin To Net: NetName=GND1 Pin=C3-2
+Added Pin To Net: NetName=GND1 Pin=LED2-1
+Added Pin To Net: NetName=GND1 Pin=PS1-1
+Added Pin To Net: NetName=GND1 Pin=PS1-4
+Added Pin To Net: NetName=GND1 Pin=R1-1
+Added Pin To Net: NetName=GND1 Pin=R3-1
+Added Net: Name=GND1
+Added Pin To Net: NetName=GND2 Pin=C4-2
+Added Pin To Net: NetName=GND2 Pin=C5-2
+Added Pin To Net: NetName=GND2 Pin=PS2-3
+Added Pin To Net: NetName=GND2 Pin=PS3-5
+Added Pin To Net: NetName=GND2 Pin=R4-1
+Added Pin To Net: NetName=GND2 Pin=R5-2
+Added Net: Name=GND2
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE1-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE1-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE2-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE2-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE3-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE3-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=vac_in-1
+Added Net: Name=NetFUSE1_1
+Added Pin To Net: NetName=NetFUSE1_2 Pin=FUSE1-2
+Added Pin To Net: NetName=NetFUSE1_2 Pin=FUSE1-2
+Added Pin To Net: NetName=NetFUSE1_2 Pin=PS1-ACL
+Added Net: Name=NetFUSE1_2
+Added Pin To Net: NetName=NetFUSE2_2 Pin=FUSE2-2
+Added Pin To Net: NetName=NetFUSE2_2 Pin=FUSE2-2
+Added Pin To Net: NetName=NetFUSE2_2 Pin=PS2-2
+Added Net: Name=NetFUSE2_2
+Added Pin To Net: NetName=NetFUSE3_2 Pin=FUSE3-2
+Added Pin To Net: NetName=NetFUSE3_2 Pin=FUSE3-2
+Added Pin To Net: NetName=NetFUSE3_2 Pin=PS3-1
+Added Net: Name=NetFUSE3_2
+Added Pin To Net: NetName=NetLED1_2 Pin=LED1-2
+Added Pin To Net: NetName=NetLED1_2 Pin=R1-2
+Added Net: Name=NetLED1_2
+Added Pin To Net: NetName=NetLED2_2 Pin=LED2-2
+Added Pin To Net: NetName=NetLED2_2 Pin=R2-2
+Added Net: Name=NetLED2_2
+Added Pin To Net: NetName=NetLED3_2 Pin=LED3-2
+Added Pin To Net: NetName=NetLED3_2 Pin=R3-2
+Added Net: Name=NetLED3_2
+Added Pin To Net: NetName=NetLED4_2 Pin=LED4-2
+Added Pin To Net: NetName=NetLED4_2 Pin=R4-2
+Added Net: Name=NetLED4_2
+Added Pin To Net: NetName=NetLED5_2 Pin=LED5-2
+Added Pin To Net: NetName=NetLED5_2 Pin=R5-1
+Added Net: Name=NetLED5_2
+Added Pin To Net: NetName=NetPS1_ACN Pin=PS1-ACN
+Added Pin To Net: NetName=NetPS1_ACN Pin=PS2-1
+Added Pin To Net: NetName=NetPS1_ACN Pin=PS3-2
+Added Pin To Net: NetName=NetPS1_ACN Pin=vac_in-2
+Added Net: Name=NetPS1_ACN
+Change Class Name : Old Net Name=sensing_circuits New Net Name=power_supplies
+Added Member To Class: ClassName=power_supplies Member=Component C1
+Added Member To Class: ClassName=power_supplies Member=Component C2 C1
+Added Member To Class: ClassName=power_supplies Member=Component C3 C1
+Added Member To Class: ClassName=power_supplies Member=Component C4 C1
+Added Member To Class: ClassName=power_supplies Member=Component C5 C1
+Added Member To Class: ClassName=power_supplies Member=Component FUSE1 fuse < 5A
+Added Member To Class: ClassName=power_supplies Member=Component FUSE2 fuse < 5A
+Added Member To Class: ClassName=power_supplies Member=Component FUSE3 fuse < 5A
+Added Member To Class: ClassName=power_supplies Member=Component LED1 LED
+Added Member To Class: ClassName=power_supplies Member=Component LED2 LED
+Added Member To Class: ClassName=power_supplies Member=Component LED3 LED
+Added Member To Class: ClassName=power_supplies Member=Component LED4 LED
+Added Member To Class: ClassName=power_supplies Member=Component LED5 LED
+Added Member To Class: ClassName=power_supplies Member=Component PS1 AC/DC CONVERTER 5V +/-15V 30W
+Added Member To Class: ClassName=power_supplies Member=Component PS2 CONV AC/DC 1W 5V
+Added Member To Class: ClassName=power_supplies Member=Component PS3 PWR SPLY MEDICAL 15V 2.67A 40W
+Added Member To Class: ClassName=power_supplies Member=Component R1 Res1
+Added Member To Class: ClassName=power_supplies Member=Component R2 Res1
+Added Member To Class: ClassName=power_supplies Member=Component R3 Res1
+Added Member To Class: ClassName=power_supplies Member=Component R4 Res1
+Added Member To Class: ClassName=power_supplies Member=Component R5 Res1
+Added Member To Class: ClassName=power_supplies Member=Component vac_in 5MM_HOR_ENTRY
+Added Room: Name=power_supplies

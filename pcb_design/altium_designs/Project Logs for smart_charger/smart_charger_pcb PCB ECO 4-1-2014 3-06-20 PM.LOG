@@ -1,0 +1,9 @@
+Added Component: Designator=5WR*(Res_Vishay_5W)
+Added Pin To Net: NetName=+15V Pin=*-+15V
+Added Pin To Net: NetName=-15V Pin=*--15V
+Added Pin To Net: NetName=Net*_1 Pin=5WR*-1
+Added Pin To Net: NetName=Net*_2 Pin=5WR*-2
+Change Net Name : Old Net Name=Net*_1 New Net Name=Net5WR*_1
+Change Net Name : Old Net Name=Net*_2 New Net Name=Net*_HV+
+Added Member To Class: ClassName=sensing_circuits Member=Component 5WR*
+Added Room: Name=sensing_circuits

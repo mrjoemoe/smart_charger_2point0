@@ -1,0 +1,17 @@
+Change Component Designator: OldDesignator=5VOUT NewDesignator=5V1_OUT
+Added Component: Designator=+15V_OUT(5MM_HOR_ENTRY)
+Added Component: Designator=-15V_OUT(5MM_HOR_ENTRY)
+Added Component: Designator=5V2_OUT(5MM_HOR_ENTRY)
+Added Component: Designator=15V2_OUT(5MM_HOR_ENTRY)
+Added Pin To Net: NetName=+15V Pin=+15V_OUT-1
+Added Pin To Net: NetName=GND1 Pin=+15V_OUT-2
+Added Pin To Net: NetName=-15V Pin=-15V_OUT-1
+Added Pin To Net: NetName=GND1 Pin=-15V_OUT-2
+Added Pin To Net: NetName=5V2 Pin=5V2_OUT-1
+Added Pin To Net: NetName=GND2 Pin=5V2_OUT-2
+Added Pin To Net: NetName=15V2 Pin=15V2_OUT-1
+Added Pin To Net: NetName=GND2 Pin=15V2_OUT-2
+Added Member To Class: ClassName=power_supplies Member=Component +15V_OUT 5MM_HOR_ENTRY
+Added Member To Class: ClassName=power_supplies Member=Component -15V_OUT 5MM_HOR_ENTRY
+Added Member To Class: ClassName=power_supplies Member=Component 5V2_OUT 5MM_HOR_ENTRY
+Added Member To Class: ClassName=power_supplies Member=Component 15V2_OUT 5MM_HOR_ENTRY

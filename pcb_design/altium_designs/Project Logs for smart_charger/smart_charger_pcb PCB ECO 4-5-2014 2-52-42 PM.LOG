@@ -1,0 +1,5 @@
+Added Component: Designator=CCT1(CAPR5-4X5)
+Added Pin To Net: NetName=5V1 Pin=CCT1-1
+Added Pin To Net: NetName=GND1 Pin=CCT1-2
+Added Member To Class: ClassName=fo_tx_array Member=Component CCT1 Cap2
+Added Room: Name=fo_tx_array

@@ -1,0 +1,18 @@
+Added Component: Designator=FUSE1(Fuse < 5A)
+Added Component: Designator=FUSE2(Fuse < 5A)
+Added Component: Designator=FUSE3(Fuse < 5A)
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE1-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE1-1
+Added Pin To Net: NetName=NetFUSE1_2 Pin=FUSE1-2
+Added Pin To Net: NetName=NetFUSE1_2 Pin=FUSE1-2
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE2-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE2-1
+Added Pin To Net: NetName=NetFUSE2_2 Pin=FUSE2-2
+Added Pin To Net: NetName=NetFUSE2_2 Pin=FUSE2-2
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE3-1
+Added Pin To Net: NetName=NetFUSE1_1 Pin=FUSE3-1
+Added Pin To Net: NetName=NetFUSE3_2 Pin=FUSE3-2
+Added Pin To Net: NetName=NetFUSE3_2 Pin=FUSE3-2
+Added Member To Class: ClassName=power_supplies Member=Component FUSE1 fuse < 5A
+Added Member To Class: ClassName=power_supplies Member=Component FUSE2 fuse < 5A
+Added Member To Class: ClassName=power_supplies Member=Component FUSE3 fuse < 5A

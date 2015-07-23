@@ -1,0 +1,9 @@
+Change Component Comment : Designator=C20S Old Comment=C5 New Comment=C20
+Added Component: Designator=C21S(CAPR5-4X5)
+Added Component: Designator=C22S(CAPR5-4X5)
+Added Pin To Net: NetName=5V1 Pin=C21S-1
+Added Pin To Net: NetName=GND1 Pin=C21S-2
+Added Pin To Net: NetName=5V1 Pin=C22S-1
+Added Pin To Net: NetName=GND1 Pin=C22S-2
+Added Member To Class: ClassName=sensing_circuits Member=Component C21S C21
+Added Member To Class: ClassName=sensing_circuits Member=Component C22S C22

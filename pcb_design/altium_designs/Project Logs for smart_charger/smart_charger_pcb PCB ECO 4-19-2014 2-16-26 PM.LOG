@@ -1,0 +1,32 @@
+Removed Pin From Net: NetName=Net*_4 Pin=HT1-3A
+Removed Pin From Net: NetName=Net*_5 Pin=HT1-4A
+Removed Pin From Net: NetName=Net*_6 Pin=HT1-5A
+Added Component: Designator=*(Conn_10Pos)
+Added Component: Designator=to_adc(Conn_10Pos)
+Added Pin To Net: NetName=GND1 Pin=*-1
+Added Pin To Net: NetName=Net*_2 Pin=*-2
+Added Pin To Net: NetName=Net*_3 Pin=*-3
+Added Pin To Net: NetName=GND1 Pin=*-4
+Added Pin To Net: NetName=Net*_5 Pin=*-5
+Added Pin To Net: NetName=Net*_6 Pin=*-6
+Added Pin To Net: NetName=GND1 Pin=*-7
+Added Pin To Net: NetName=Net*_4 Pin=*-8
+Added Pin To Net: NetName=Net*_7 Pin=*-9
+Added Pin To Net: NetName=GND1 Pin=*-10
+Added Pin To Net: NetName=Net*_5 Pin=HT1-3A
+Added Pin To Net: NetName=Net*_6 Pin=HT1-4A
+Added Pin To Net: NetName=Net*_4 Pin=HT1-5A
+Added Pin To Net: NetName=GND1 Pin=to_adc-1
+Added Pin To Net: NetName=NetC2S_1 Pin=to_adc-2
+Added Pin To Net: NetName=GND1 Pin=to_adc-3
+Added Pin To Net: NetName=NetC8S_1 Pin=to_adc-4
+Added Pin To Net: NetName=GND1 Pin=to_adc-5
+Added Pin To Net: NetName=NetC3S_1 Pin=to_adc-6
+Added Pin To Net: NetName=GND1 Pin=to_adc-7
+Added Pin To Net: NetName=NetC4S_1 Pin=to_adc-8
+Added Pin To Net: NetName=GND1 Pin=to_adc-9
+Added Pin To Net: NetName=NetC6S_1 Pin=to_adc-10
+Change Net Name : Old Net Name=Net*_4 New Net Name=Net*_8
+Change Net Name : Old Net Name=Net*_7 New Net Name=Net*_9
+Added Member To Class: ClassName=fo_tx_array Member=Component * 10PosConn
+Added Member To Class: ClassName=sensing_circuits Member=Component to_adc 10PosConn

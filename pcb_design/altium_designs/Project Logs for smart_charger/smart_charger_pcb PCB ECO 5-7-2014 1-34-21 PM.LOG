@@ -1,0 +1,5 @@
+Change Component Designator: OldDesignator=+15V NewDesignator=LED3
+Change Component Designator: OldDesignator=-15V NewDesignator=LED2
+Change Component Designator: OldDesignator=5V1 NewDesignator=LED1
+Change Component Designator: OldDesignator=5V2 NewDesignator=LED4
+Change Component Designator: OldDesignator=15V2 NewDesignator=LED5
