@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>SN8200 Scan-Join Config</title>
+</head>
+<body>
+	<h2> Available WiFi networks </h2>
+	<p id="conndisp" style="color:#ff00ff"></p>
+	<p id="feed"></p>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			scan();
+		});
+		function scan()
+		{
+			var params = {"styp":0,"btyp":2,"bss":"","ch":[],"ssid":""};
+			$.ajax({
+			type:'POST',
+			url:"/sws/wifi/scan",
+			data:{Params: JSON.stringify(params)},
+			success:function(feed) {
+			var thumbs = [];
+			var l=feed.item.length;
+			if (feed.s != 0) {
+				$('#feed').html("Scan failed. Try again.");
+			}
+			else {
+			thumbs.push('<table border="1"> <tr><th>SSID</th><th>Channel</th><th>BSSID</th><th>Signal(dBm)</th></tr>');
+			for(var i=0; i < l-1; ++i) 
+			{
+				thumbs.push("<tr>");
+				thumbs.push("<td>"+feed.item[i].ssid+"</td>");
+				thumbs.push("<td>"+feed.item[i].chan+"</td>");
+				thumbs.push("<td>"+feed.item[i].bss+"</td>");
+				thumbs.push("<td>"+feed.item[i].rssi+"</td>");
+				thumbs.push("</tr>");
+			}
+			thumbs.push("</table>");
+			$('#feed').html(thumbs.join(''));
+			}
+			},
+			dataType:'jsonp'
+			});
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+BODY {
+	margin: 20px;
+	padding: 20px;
+	font-family: "Lucida Grande", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333333;
+}
+#page {
+	margin: auto;
+	width: 1000px;
+}
+UL.mytabs {
+	position: relative;
+	z-index: 2;
+}
+UL.mytabs, UL.mytabs LI {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	float: left;
+}
+UL.mytabs LI { padding: 0 5px; }
+UL.mytabs LI A {
+	float: left;
+	padding: 7px;
+	border: 1px solid #CCCCCC;
+	border-bottom: 1px solid #E0E0E0;
+	background: #F0F0F0;
+	text-decoration: none;
+	color: #333333;
+	height: 22px;
+}
+UL.mytabs LI A:HOVER, UL.mytabs LI.current A {
+	background: #FFFFFF;	
+}
+UL.mytabs LI.current A {
+	font-weight: bold;
+	font-size: 14px;
+	border-bottom: 1px solid #FFFFFF;
+}
+.mytabs-container {
+	position: relative;
+	z-index: 1;
+	clear: both;
+	border: 1px solid #E0E0E0;
+	padding: 10px;
+	top: -1px;
+}
+table td, table th
+{
+    padding: 3px;
+}
+tr.d0 td {
+	background-color: #F8FEDC;
+}
+tr.d1 td {
+	background-color: #E7E7E7;
+}

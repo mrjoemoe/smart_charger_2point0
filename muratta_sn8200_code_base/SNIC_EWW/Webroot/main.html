@@ -1,0 +1,590 @@
+<html>
+<head>
+
+<p> Test 
+
+
+</head>
+</html>
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+	<title>Smart Charger</title>
+	<!--script type="text/javascript" src="/javascript/jquery-1.3.2.min.js"></script-->
+	<script type="text/javascript" src="/javascript/json2.min.js"></script>
+	<script type="text/javascript">
+	
+	// global variables
+	
+	var hex_index = 2;
+	
+	var firsthex = "000";																	
+	var secondhex = "000";
+	var thirdhex = "000";
+	
+	var j = 0;
+	var power_type = "P";
+	var pRef = "0";
+	var qRef = "0";
+	var oldRef = "0";
+	var powerMeas = 0;
+	
+	var wake_pulse = null;
+	var data_poll = null;
+	
+	var pulse_old = 0;
+	var pulse_new = 0;
+
+		var meas_time = new Array();	
+		var active_power = new Array();
+		var reactive_power = new Array();
+		var battery_current = new Array();
+		var battery_voltage = new Array();
+		var dclink_voltage = new Array();
+		var efficiency = new Array();
+		var battery_soc = new Array();
+		var vd = new Array();
+		var id = new Array()
+		var iq = new Array();
+		var faults = new Array();
+
+		var meas_index = -1;
+		var meas_period = 0;
+	
+	var i2cArray = new Array();
+	i2cArray[0] = "82";
+	i2cArray[1] = "83";
+	i2cArray[2] = "84";
+	i2cArray[3] = "85";
+	i2cArray[4] = "86";
+	i2cArray[5] = "87";
+	i2cArray[6] = "88";
+	i2cArray[7] = "89";
+	i2cArray[8] = "8A";
+	i2cArray[9] = "8B";
+	i2cArray[10] = "8C";
+	
+	// initlization function
+	function system_init() {
+		clearInterval(data_poll);
+		clearInterval(wake_pulse);
+		wake_pulse = null;
+		data_poll = null;
+		params = {"sa":"40","v":"88","l":2};
+		$.ajax({
+		type: "POST",async: true,url: '/sws/i2c/w2r',timeout: 1000,data: {Params: JSON.stringify(params)},dataType: "jsonp",
+		error: function(request, status, err) {if (status == "timeout") alert("request timeout, initilization fail")},
+		success: function(data){
+			if (data.s[1] != 0) alert ("unable to read SOC, initilization fail");
+			else {
+				ratings(data.v);
+				wake_pulse = setInterval(function(){c2000_pulse()},5000); // setup communication pulse with c2000
+				params = {"sa":"40","v":"05"};
+				$.ajax({
+				type: "POST",url: "/sws/i2c/wr",timeout: 1000,data: {Params: JSON.stringify(params)},dataType: "jsonp",
+				success: function(resetRsp){if (resetRsp.s != 0) alert ("Initilization Fail!");},
+				error: function(request, status, err) {if (status == "timeout") alert ("timeout, initlization fail!");},
+				});}}})	
+	}
+	
+		// Send Byte to read from C2000
+	function c2000_pulse() {
+	params = {"sa":"40","v":"8D","l":2};
+	$.ajax({
+	type: "POST",async: true,url: '/sws/i2c/w2r',timeout: 500,data: {Params: JSON.stringify(params)},
+	success: function(data){if (data.s[1] == 0) c2000(h2i(data.v));},
+	dataType: "jsonp"
+	});
+	}
+	
+	// Battery and Charger Ratings
+	function ratings(input) {			
+		var soc = h2i(input);
+		if (soc == 200) alert("Unable to establish communcaiton with BMS! Ensure BMS is ON and CAN wires are connected to smart charger");
+		else{
+		$('#disp99').html("Battery Capacity: 4.1 kWh");
+		$('#disp98').html("kVA Rating: 1.92 kVA");
+		$('#disp97').html("Battery SOC: ".concat(soc).concat(" %"));}
+	}
+	
+	
+	// c2000 communication function
+	function c2000(input) {
+		pulse_new = parseInt(input);
+		if ((pulse_new - pulse_old) == 1) $('#disp100').html("CONNECTED");
+		else $('#disp100').html("NOT CONNECTED");
+		pulse_old = pulse_new;
+	}
+	
+	
+	// start/stop data logging
+	function measure_init() {
+		meas_period = document.C2000form.elements['meas_period'].value * 1000;	
+		if (parseInt(meas_period) < 1) $('#disp1').html("Please select integer > 0");
+		else {
+		$('#disp0').html(meas_period);
+		clearInterval(data_poll);
+		data_poll = setInterval(function(){measure()},meas_period);}
+	}
+	
+	
+	// exports data to csv
+	function write2file() {		
+	
+	var datastring = "time,P,Q,Ibatt,Vbatt,Vdc,eff,soc,vd,id,iq,faults";
+	clearInterval(data_poll);
+
+	for (var i=0; i<meas_index; i++){
+		datastring = datastring.concat("\n").concat(meas_time[i]);
+		datastring = datastring.concat(",").concat(active_power[i]);		
+		datastring = datastring.concat(",").concat(reactive_power[i]);
+		datastring = datastring.concat(",").concat(battery_current[i]);
+		datastring = datastring.concat(",").concat(battery_voltage[i]);
+		datastring = datastring.concat(",").concat(dclink_voltage[i]);
+		datastring = datastring.concat(",").concat(efficiency[i]);
+		datastring = datastring.concat(",").concat(battery_soc[i]);
+		datastring = datastring.concat(",").concat(vd[i]);
+		datastring = datastring.concat(",").concat(id[i]);
+		datastring = datastring.concat(",").concat(iq[i]);
+		datastring = datastring.concat(",").concat(faults[i]);}
+		
+	var csvContent = "data:text/csv;charset=utf-8,".concat(datastring);
+	
+	var encodedUri = encodeURI(csvContent);	
+	window.open(encodedUri);	
+	}
+	
+	// hex to int function, to be used after a read function
+	function h2i(h) {
+	var hstring = h.toString();
+	var plusminus = 0;
+	h = parseInt(hstring,16)+1;
+	if (hstring.slice(0,1) == "f") {
+		plusminus = 1;
+		h = 65536 - h;
+		hstring = h.toString();
+	}
+	if (hstring.length == 2) {
+		var first = hstring.slice(0,1);
+		var second = hstring.slice(1,2);
+		hstring = first.concat("0").concat(second);
+	}
+	hstring = h.toString();
+	if (plusminus == 1) hstring = "-".concat(hstring);
+	return hstring;
+	}
+	
+	
+	
+	// Error Messages
+	function error_msg(msg) {
+		if (msg == "f0") {
+			$('#disp1').html(power_type.concat(" request accepted!"));
+			$('#disp4').html(pRef);
+			$('#disp5').html(qRef);
+			overS = 0;
+		}
+	
+		if (msg == "10") {
+			read_remaining_power_bw();
+			if (power_type == "P") pRef = oldRef;
+			else qRef = oldRef;
+		}
+	}
+	
+	// Clear all Displayed Messages
+	function msg_clear() {
+		$('#disp0').html("---");
+		$('#disp1').html("---");
+		$('#disp2').html("---");
+		$('#disp3').html("---");
+		$('#disp4').html("---");
+		$('#disp5').html("---");
+		$('#disp6').html("---");
+		$('#disp7').html("---");
+		$('#disp8').html("---");	
+		$('#disp9').html("---");			
+		$('#disp10').html("---");
+		$('#disp11').html("---");			
+		$('#disp12').html("---");
+		$('#disp13').html("---");			
+		$('#disp14').html("---");
+		$('#disp15').html("---");		
+		$('#disp100').html("---");				
+	}
+	
+	
+	//display stuff
+	function array_fill(code,data) {
+		if (code == "82") {
+			active_power[meas_index] = data;
+			$('#disp6').html(active_power[meas_index]);	
+			}
+		if (code == "83") {
+			reactive_power[meas_index] = data;
+			$('#disp7').html(reactive_power[meas_index]);			
+			}
+		if (code == "84") {
+			battery_current[meas_index] = data;
+			$('#disp8').html(battery_current[meas_index]);			
+			}
+		if (code == "85") {
+			battery_voltage[meas_index] = data;
+			$('#disp9').html(battery_voltage[meas_index]);			
+			}
+		if (code == "86") {
+			dclink_voltage[meas_index] = data;
+			$('#disp10').html(dclink_voltage[meas_index]);			
+			}
+		if (code == "87") {
+			efficiency[meas_index] = data;
+			$('#disp11').html(efficiency[meas_index]);			
+			}
+		if (code == "88") {
+			battery_soc[meas_index] = data;
+			$('#disp12').html(battery_soc[meas_index]);		
+			}
+		if (code == "89") {
+			vd[meas_index] = data;
+			$('#disp13').html(vd[meas_index]);			
+			}
+		if (code == "8A" || code == "8a") {
+			id[meas_index] = data;
+			$('#disp14').html(id[meas_index]);			
+			}
+		if (code == "8B" || code == "8b") {
+			iq[meas_index] = data;
+			$('#disp15').html(iq[meas_index]);			
+			}
+		if (code == "8C" || code == "8c") {
+			faults[meas_index] = data;
+			$('#disp2').html("FAULT CODE: ".concat(faults[meas_index]));
+			}
+	}
+	
+	
+	// Send Byte to read from C2000
+	function read_remaining_power_bw() {
+	params = {"sa":"40","v":"81","l":2};
+	$.ajax({
+	type: "POST",async: true,url: '/sws/i2c/w2r',timeout: 1000,data: {Params: JSON.stringify(params)},dataType: "jsonp",
+	success: function(data){
+		var st;		
+		if (data.s[1] == 0) {
+			if (h2i(data.v).slice(0,1) == "-") $('#disp1').html("SOC too low. Please select ".concat(power_type).concat(" greater than ").concat(h2i(data.v)));
+			else $('#disp1').html("kVA rating exceeded or SOC too high. Please select ".concat(power_type).concat(" less than ").concat(h2i(data.v)));
+		}		
+	},});}
+	
+	// Send Byte to read from C2000
+	function measure_read() {
+	var send_code = "8".concat(hex_index.toString(16));
+	params = {"sa":"40","v":send_code,"l":2};
+	$.ajax({
+	type: "POST",async: true,url: '/sws/i2c/w2r',timeout: 1000,data: {Params: JSON.stringify(params)},	dataType: "jsonp",
+	success: function(data){
+		if (data.s[1] == 0) {
+			if (send_code == "8c") array_fill(send_code,data.v);
+			else {
+				array_fill(send_code,h2i(data.v));
+				hex_index = hex_index + 1;}
+			if (hex_index < 13) measure_read();
+		}
+	}
+	});
+	}
+	
+	// Read byte of data from C2000
+	function read_byte() {
+		var	params = {"sa":"40","l":1};
+		$.ajax({
+		type: "POST",url: '/sws/i2c/rd',timeout: 1000,data: {Params: JSON.stringify(params)},dataType: "jsonp",
+		error: function(request, status, err) {if (status == "timeout") $('#disp1').html("ajax timeout");},
+		success: function(data){if (data.s == 0) error_msg(data.v);}
+	});}	
+	
+	function measure() {
+		meas_index = meas_index + 1;
+		hex_index = 2;
+		measure_read();
+		meas_time[meas_index] = meas_index * meas_period / 1000;
+	}
+	
+	// send power request to c2000
+	function send_power_requests()
+	{
+		params = {"sa":"40","v":firsthex};
+		$.ajax({
+		type: "POST",url: "/sws/i2c/wr",timeout: 1000,data: {Params: JSON.stringify(params)},dataType: "jsonp",
+		error: function (request, status, err) {if (status == "timeout") alert("timeout, unable to service power change request")},		
+		success: function(resetRsp){	
+				if (resetRsp.s != 0) alert("data failed to transmit, unable to service power change request");
+				else {
+				
+					params = {"sa":"40","v":secondhex};
+					$.ajax({
+					type: "POST",url: "/sws/i2c/wr",timeout: 1000,data: {Params: JSON.stringify(params)},dataType: "jsonp",
+					error: function(request, status, err) {if (status == "timeout") alert("timeout, unable to service power change request")},		
+					success: function(resetRsp){	
+					if (resetRsp.s != 0) alert("data failed to transmit, unable to service power change request");
+					else {
+				
+						params = {"sa":"40","v":thirdhex};
+						$.ajax({
+						type: "POST",url: "/sws/i2c/wr",timeout: 1000,data: {Params: JSON.stringify(params)},dataType: "jsonp",
+						error: function(request, status, err) {if (status == "timeout") alert("timeout, unable to service power change request")},		
+						success: function(resetRsp){	
+						if (resetRsp.s != 0) alert("data failed to transmit, unable to service power change request");
+						else {
+							firsthex = "00";
+							secondhex = "00";
+							thirdhex = "00";
+							read_byte();
+						}}});}}});}}});
+	}
+	
+	
+	function mode_select(mode)
+	{
+		params = {"sa":"40","v":mode};
+		$.ajax({
+		type: "POST",
+		url: "/sws/i2c/wr",
+		timeout: 1000,
+		data: {Params: JSON.stringify(params)},
+		success: function(resetRsp){	
+				if (resetRsp.s == 0) {
+				if (mode == "A0")$('#disp3').html("SMART CHARGER OFF");
+				if (mode == "B0")$('#disp3').html("SMART CHARGER ON");
+				if (mode == "C0")$('#disp3').html("DCDC OFF!");
+				if (mode == "D0")$('#disp3').html("DCDC ON!");
+				if (mode == "E0")$('#disp3').html("STANDARD CHARGING ENABLED");
+				if (mode == "F0")$('#disp3').html("SMART CHARGING ENABLED");
+				}
+				else alert("error transmitting data over i2c bus, unable to change mode")
+		},
+		error: function(request, status, err) {if (status == "timeout") alert("request timeout, unable to change mode")},
+		dataType: "jsonp"
+		});	
+	};
+	
+	
+	// Smart Charger Turn On/Off
+	function smart_charger_on() {
+		if (document.C2000form.elements['scON'].checked) mode_select("B0");
+		else mode_select("A0");}
+	
+	// Smart Charger Turn On/Off
+	function dcdc_on() {
+		if (document.C2000form.elements['dcdcON'].checked) mode_select("D0");
+		else mode_select("C0");}
+
+	// Smart Charger Turn On/Off
+	function smart_charge() {
+		if (document.C2000form.elements['smartCharge'].checked) mode_select("F0");
+		else mode_select("E0");}	
+	
+	// Main Function
+	function send_i2c(power) {	
+	var decstring = document.C2000form.elements['pinval'].value;
+	if (power == "0") {
+		power_type = "P";
+		oldRef = pRef;
+		pRef = decstring;
+	}
+	else {
+		power_type = "Q";
+		oldRef = qRef;
+		qRef = decstring;
+	}
+	
+		
+	var posneg = 0;
+	power = parseInt(power);
+	
+	if (decstring.slice(0,1) == "-") {												
+		posneg = 1;		
+		decstring = decstring.slice(1,decstring.length);								
+	}
+	var decvalue = parseInt(decstring);	
+	
+	if (decvalue > 1920)
+		$('#disp1').html("Please input a value between -1920 and 1920");
+	else {
+		var hexstring = decvalue.toString(16);
+		if (decvalue < 16) 	{															
+			hexstring = "00".concat(hexstring);
+			}
+		else if (decvalue < 256) {
+			hexstring = "0".concat(hexstring);	
+		}
+		firsthex = (2+posneg).toString(16).concat(hexstring.slice(2,3));
+		secondhex = (4+power).toString(16).concat(hexstring.slice(1,2));
+		thirdhex = "6".concat(hexstring.slice(0,1));
+	
+		send_power_requests();
+	}
+	return;		
+	};
+	
+</script>
+
+</head>
+<body>
+<h2><u><b>Smart Charger Controller</b></u></h2>
+<script type="text/javascript">
+
+
+	<!-- Configure I2C parameters -->
+	$(document).ready(function() {
+	var params = {"clk":100000,"ad":"0000","ctl":"0000"};
+	$('#disp0').html("---");
+	$('#disp1').html("---");
+	$('#disp2').html("---");
+	$('#disp3').html("---");
+	$('#disp4').html("---");
+	$('#disp5').html("---");
+	$('#disp6').html("---");
+	$('#disp7').html("---");
+	$('#disp8').html("---");	
+	$('#disp9').html("---");	
+	$('#disp10').html("---");		
+	$('#disp11').html("---");	
+	$('#disp12').html("---");		
+	$('#disp13').html("---");		
+	$('#disp14').html("---");	
+	$('#disp15').html("---");
+	$('#disp97').html("---");
+	$('#disp98').html("---");
+	$('#disp99').html("---");	
+	$('#disp100').html("---");		
+	$.ajax({
+	type: "POST",
+	url: "/sws/i2c/cfg",
+	data: {Params: JSON.stringify(params)},
+	timeout: 3000,
+	success: function(data){
+		if (data.s == 0) {
+			params = {"sa":"40","v":"0A"};
+			$.ajax({
+			type: "POST",
+			url: "/sws/i2c/wr",
+			timeout: 3000,
+			data: {Params: JSON.stringify(params)},
+			success: function(resetRsp){
+				if (resetRsp.s == 0) {
+					$('#disp100').html("Initialization Successful");
+					system_init();}
+				else alert("Initialization Fail, ensure c2000 is on and refresh web browser");
+			},
+			error: function(request, status, err) {if (status == "timeout") alert("AJAX request Timeout: Ensure smart charger is on and reset wifi chip");},
+			dataType: "jsonp"
+			});	
+		}
+		else alert("COMMMUNICATION FAILURE BETWEEN MURATTA SN8200 AND C2000 TMS320F2808, ENSURE EVERYTHING IS ON AND CHECK I2C WIRES");
+	},
+	error: function(request, status, err) {if (status == "timeout") alert("INITILIZATION FAIL, RESET EVERYTHING!");},
+	dataType: "jsonp"
+	});
+	})
+	</script>
+	
+<form name='C2000form'>
+
+<table border="1" style="width:300px">
+<tr><td><b> Connection Status: </b></td>
+<td><p id="disp100" style="color:#ff00ff"></p></td></tr></table>
+<br>
+<table border="1" style="width:300px">
+<tr><td><p id="disp99" style="color:#ff00ff"></p></td>
+<td><p id="disp98" style="color:#ff00ff"></p></td>
+<td><p id="disp97" style="color:#ff00ff"></p></td></tr></table>
+
+
+<p id="disp100" style="color:#ff00ff"></p>
+<p id="disp99" style="color:#ff00ff"></p>
+<p id="disp98" style="color:#ff00ff"></p>
+<p id="disp97" style="color:#ff00ff"></p>
+<h3><b> Mode Selection </b></h3>
+<p id="disp3" style="color:#ff00ff"></p>
+<input type="checkbox" name="scON" onclick="smart_charger_on()"/> <b>Check to turn on EV Charger</b> &nbsp; <br>
+<input type="checkbox" name="dcdcON" onclick="dcdc_on()"/> <b>Check to turn on DC/DC (only reactive power control available when unchecked)</b> &nbsp; <br>
+<input type="checkbox" name="smartCharge" onclick="smart_charge()"/> <b>Check for smart charging control, uncheck for standard charging control</b> &nbsp;
+
+<h3> P and Q Requests </h3>
+
+<p></p><p></p>
+<table border="1" style="width:300px">
+<tr><td><b>Power Input</b></td>
+<td><input type="text" name="pinval" value="0" size=5 /></td></tr><tr>
+<td><input type="button" value="Send P Request" onclick="send_i2c('0')"></td>
+<td><input type="button" value="Send Q Request" onclick="send_i2c('1')"></td></tr><tr>
+</tr><tr>
+<td><p><b>P Reference: </b></p></td>
+<td><p id="disp4" style="color:#ff00ff"></p></tr><tr>
+<td><p><b>Q Reference: </b></p></td>
+<td><p id="disp5" style="color:#ff00ff"></p></tr><tr></table>
+<p id="disp1" style="color:#f100ff"></p>
+
+<h3><b> Measurements </b></h3>
+<input type="button" value="Start Measurements" onclick="measure_init()"><p></p>
+
+<table border="1"><tr><td>
+<p><b> Measurement Frequency (s) </b></p></td>
+<td><input type="text" name="meas_period" value="0" size=5 /></td></tr></table>
+
+<br>
+
+
+<table border="1"><tr><td>
+<p><b>-Active Power-</b></p></td><td>
+<p><b>-Reactive Power- </b></p></td><td>
+<p><b>-Battery Current- </b></p></td><td>
+<p><b>-Battery Voltage- </b></p></td><td>
+<p><b>--DC Link Voltage-- </b></p></td>
+</tr><tr><td>
+<p id="disp6" style="color:#ff00ff"></p></td><td>
+<p id="disp7" style="color:#ff00ff"></p></td><td>
+<p id="disp8" style="color:#ff00ff"></p></td><td>
+<p id="disp9" style="color:#ff00ff"></p></td><td>
+<p id="disp10" style="color:#ff00ff"></p></td></tr></table>
+
+<br>
+
+<table border="1"><tr><td>
+<p><b>-Efficiency-</b></p></td><td>
+<p><b>-Battery SOC- </b></p></td><td>
+<p><b>-Vd- </b></p></td><td>
+<p><b>-Id- </b></p></td><td>
+<p><b>-Iq- </b></p></td>
+</tr><tr><td>
+<p id="disp11" style="color:#ff00ff"></p></td><td>
+<p id="disp12" style="color:#ff00ff"></p></td><td>
+<p id="disp13" style="color:#ff00ff"></p></td><td>
+<p id="disp14" style="color:#ff00ff"></p></td><td>
+<p id="disp15" style="color:#ff00ff"></p></td></tr></table>
+
+<br>
+
+<input type="button" value="EXPORT DATA" onclick="write2file()"><p></p>
+<br>
+
+<h3><b> Debug </b></h3>
+<input type="button" value="Clear Messages" onclick="msg_clear()">
+<p id="disp0" style="color:#ff00ff"></p>
+<p id="disp2" style="color:#ff00ff"></p>
+</form>
+</body>
+</html>
+
+
+
+

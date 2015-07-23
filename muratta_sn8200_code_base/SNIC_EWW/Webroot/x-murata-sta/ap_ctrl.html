@@ -1,0 +1,66 @@
+<html>
+	<head>
+	<title>IP configuration</title>
+
+	<!--script type="text/javascript" src="/javascript/json2.min.js"></script-->
+	<script type="text/javascript">
+
+    function do_post(uri)
+    {
+	var params;
+	var di=document.getElementById('disp');
+	di.innerHTML ="";
+
+	if (uri.indexOf('stat')>0)
+	{
+		params = {"if":"ap"};
+	}
+	else {
+		var onoff = ($('#on')[0].checked == true)?1:0;
+		var pers = ($('#persist')[0].checked == true)? 1:0;
+		params = {"on":onoff,"pers":pers};
+	}
+	$.ajax({
+		type: "POST",
+		url: uri,
+		data: {Params: JSON.stringify(params)},
+		success: function(feed){
+			if (uri.indexOf('stat')>0)
+			{
+				var mode = "State: unknown";
+				if (feed.s == 0) {
+					mode = "State: Off";
+					$('#off')[0].checked = true;
+				}
+				else if (feed.s == 3) {
+					mode = "State: On";
+					$('#on')[0].checked = true;
+				}
+
+				$('#disp').html(mode + " MAC: " + feed.mac + " SSID: "+feed.ssid );
+			}
+			else {
+				var show = "Result: "+((feed.s == 0)?"ok":"fail");
+				$('#disp').html(show);
+			}
+			
+		},
+		dataType: "jsonp"
+	});
+	}
+
+</script>
+</head>
+<body>
+<input id="on" name="mode" type="radio" value=1/> AP On &nbsp;
+<input id="off" name="mode" type="radio" value=0/> AP Off <br /> <br />
+<input id="persist" name="pers" type="radio" value=1 /> Persist &nbsp;
+<input id="notpersist" name="pers" type="radio" value=0 checked="checked"/> Not persist <br /> 
+<br />
+<p><input type="button" value="Set" onclick="do_post('/sws/wifi/ap')"></p>
+<input type="button" value="Get AP status" onclick="do_post('/sws/wifi/stat')">&nbsp;
+
+<p id="disp" style="color:#ff00ff"></p>
+
+</body>
+</html>
